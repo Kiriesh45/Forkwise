@@ -1,0 +1,19 @@
+{
+  "name": "forkwise",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Health and security scoring for GitHub repositories, in your browser.",
+  "license": "MIT",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "play": "tsx src/playground.ts"
+  },
+  "devDependencies": {
+    "tsx": "^4.23.5",
+    "typescript": "^7.0.2"
+  }
+}
