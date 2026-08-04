@@ -14,24 +14,67 @@ export interface RepoSummary {
   owner: string;
   /** e.g. "react" */
   name: string;
+  /** Repo description, or null when the owner never wrote one. */
+  description: string | null;
   /** SPDX id such as "MIT", or null when the repo has no license file. */
   licenseId: string | null;
+  /** Branch to read files from. Not always "main" — old repos use "master". */
+  defaultBranch: string;
+  /** Dominant language by bytes, or null for empty/docs-only repos. */
+  primaryLanguage: string | null;
   /** ISO 8601 timestamp of the last push. */
   pushedAt: string;
+  /** ISO 8601 timestamp of creation. Needed to tell "young" from "abandoned". */
+  createdAt: string;
   stars: number;
-  openIssues: number;
+  /**
+   * GitHub's open issue counter — which also counts open pull requests.
+   * Named honestly so nobody builds a check on a wrong assumption.
+   */
+  openIssuesAndPrs: number;
   isArchived: boolean;
   isFork: boolean;
-
-  // TODO(week 1): add the remaining fields you decide are worth keeping.
-  // Look at https://api.github.com/repos/facebook/react in your browser and
-  // pick them yourself. Ask: "could a check I described in the README use it?"
-  // If no — leave it out.
 }
 
-// TODO(week 1): define `CheckStatus` as a union of the four literal strings
-// 'pass' | 'warn' | 'fail' | 'unknown'.
+/** How a single check turned out. */
+export type CheckStatus = 'pass' | 'warn' | 'fail' | 'unknown';
 
-// TODO(week 1): define `CheckResult` — the output of a single check.
-// It needs at minimum: a stable id, a status, a weight, a human title,
-// optional evidence (text + optional url), and an optional fix hint.
+/**
+ * One concrete fact backing a check result.
+ *
+ * Every claim Forkwise makes must be traceable to something the user can
+ * verify. No evidence — no claim.
+ */
+export interface Evidence {
+  /** Human-readable fact, e.g. "No SECURITY.md in the repository root". */
+  text: string;
+  /** Link to the file, commit or advisory. Absent when there is nothing to link to. */
+  url?: string;
+}
+
+/** The output of one check. This is what the UI renders. */
+export interface CheckResult {
+  /** Stable machine id, e.g. "has-license". Never change it once released. */
+  id: string;
+  /** Short human title, e.g. "License file present". */
+  title: string;
+  status: CheckStatus;
+  /** Relative importance in the final score. See docs/scoring.md. */
+  weight: number;
+  /** Always present — may be empty. See the note below on why. */
+  evidence: Evidence[];
+  /** Actionable advice. Only meaningful for 'warn' and 'fail'. */
+  fix?: string;
+}
+
+/** The complete analysis of one repository — the top-level result. */
+export interface RepoAnalysis {
+  repo: RepoSummary;
+  checks: CheckResult[];
+  /** 0-100, derived from checks. Never stored, always recomputed. */
+  score: number;
+  /** Version of the scoring model, so old cached results can be invalidated. */
+  scoringVersion: string;
+  /** When this analysis was produced (ISO 8601). Drives cache expiry. */
+  generatedAt: string;
+}
