@@ -106,6 +106,10 @@ analysis, telemetry. These are v0.2+ and should not be started early.
 
 ## Current state
 
+<!-- Keep this section updated: rewrite it at the end of every stage so a fresh
+     session knows exactly where the work stands. -->
+
+
 Stage 0 complete: repository skeleton, strict TypeScript setup, domain types in
 `src/core/types.ts` (`RepoSummary`, `CheckStatus`, `Evidence`, `CheckResult`,
 `RepoAnalysis`).
