@@ -10,9 +10,7 @@
 
 /** A repository, reduced to what Forkwise actually needs. */
 export interface RepoSummary {
-  /** e.g. "facebook" */
   owner: string;
-  /** e.g. "react" */
   name: string;
   /** Repo description, or null when the owner never wrote one. */
   description: string | null;

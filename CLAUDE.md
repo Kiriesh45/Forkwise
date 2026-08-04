@@ -68,6 +68,41 @@ These are not stylistic preferences. Breaking them costs a rewrite later.
 - **Every claim needs evidence.** A `CheckResult` without an `Evidence` entry
   explaining it is a bug.
 
+## Code voice
+
+The author must be able to defend every line of this repository in an
+interview. Code that reads as machine-generated boilerplate fails that test
+even when it works. Concretely:
+
+- **Comments explain *why*, never *what*.** A comment that restates the code
+  below it is deleted. Good comments record a trap, a rejected alternative, or
+  a fact about the outside world — e.g. GitHub's `open_issues_count` including
+  pull requests.
+- **No JSDoc on self-evident functions.** Document a module's purpose and the
+  surprising parts; leave the obvious alone.
+- **No abstraction with a single implementation.** No interface, factory or
+  wrapper introduced "in case we need it later". Add it when the second case
+  actually arrives.
+- **No defensive `try/catch` without a named failure mode.** If you cannot say
+  what throws and what the user should see, do not catch it.
+- **Names come from the domain**, never `data`, `result`, `item`,
+  `handleData`, `processItem`. No `utils.ts` or `helpers.ts` — if a function
+  has no home, the module boundaries are wrong.
+- **No emoji** in code, comments, commit messages or documentation.
+- **Real `TODO`s stay**, with the author's name and a date. Unresolved
+  questions are part of an honest codebase.
+- **The README never promises what the code does not yet do.**
+
+Process rules that support this:
+
+- The author writes the commit messages and runs the commits.
+- The author renames anything that does not fit their taste; this is their
+  codebase, not a delivery.
+- At the end of each stage the author explains the module back, and you probe
+  it with "why not the other way?" and "what breaks if...".
+- Decisions, including rejected options, go in `docs/decisions/` in the
+  author's own words.
+
 ## Conventions
 
 - TypeScript in strict mode. `npm run typecheck` must pass before every commit.
