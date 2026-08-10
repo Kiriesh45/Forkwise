@@ -10,8 +10,7 @@
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
-    "play": "tsx src/playground.ts",
-    "lesson": "tsx src/lessons/01-types.ts"
+    "play": "tsx src/playground.ts"
   },
   "devDependencies": {
     "tsx": "^4.23.5",
