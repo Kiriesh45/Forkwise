@@ -8,14 +8,26 @@
  * not the whole codebase.
  */
 
+/**
+ * What we know about a repository's license.
+ *
+ * Three states rather than "a name or nothing", because they lead to three
+ * different verdicts: a recognised license is fine, a file nobody could
+ * identify has to be read by hand, and no license at all means the code is
+ * legally not reusable — which is the worst case, not the neutral one.
+ */
+export type LicenseInfo =
+  | { kind: 'spdx'; id: string }
+  | { kind: 'unidentified' }
+  | { kind: 'none' };
+
 /** A repository, reduced to what Forkwise actually needs. */
 export interface RepoSummary {
   owner: string;
   name: string;
   /** Repo description, or null when the owner never wrote one. */
   description: string | null;
-  /** SPDX id such as "MIT", or null when the repo has no license file. */
-  licenseId: string | null;
+  license: LicenseInfo;
   /** Branch to read files from. Not always "main" — old repos use "master". */
   defaultBranch: string;
   /** Dominant language by bytes, or null for empty/docs-only repos. */

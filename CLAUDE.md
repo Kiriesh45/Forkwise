@@ -145,8 +145,17 @@ analysis, telemetry. These are v0.2+ and should not be started early.
      session knows exactly where the work stands. -->
 
 
-Stage 0 complete: repository skeleton, strict TypeScript setup, domain types in
-`src/core/types.ts` (`RepoSummary`, `CheckStatus`, `Evidence`, `CheckResult`,
-`RepoAnalysis`).
+Stages 0 and 1 complete.
 
-**Next: Stage 1 — the GitHub data layer.** See `docs/ROADMAP.md`.
+- Domain types in `src/core/types.ts`: `RepoSummary`, `LicenseInfo`,
+  `CheckStatus`, `Evidence`, `CheckResult`, `RepoAnalysis`.
+- GitHub data layer in `src/data/github/`: raw response shapes, typed error
+  classes, a client with timeout and rate-limit tracking, and the mapper into
+  `RepoSummary`.
+- `npm run play -- owner/repo` fetches a real repository and its file tree.
+
+Known debt: API responses are asserted, not validated (see
+`docs/decisions/0001-no-runtime-validation.md`). `tsconfig.json` exposes Node
+types to the whole project, which must be narrowed once browser code exists.
+
+**Next: Stage 2 — checks.** See `docs/ROADMAP.md`.
