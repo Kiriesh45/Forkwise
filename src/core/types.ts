@@ -1,3 +1,5 @@
+import type { FileIndex } from './file-index.js';
+
 /**
  * Domain types for Forkwise.
  *
@@ -76,6 +78,25 @@ export interface CheckResult {
   /** Actionable advice. Only meaningful for 'warn' and 'fail'. */
   fix?: string;
 }
+
+/**
+ * Everything a check is allowed to look at.
+ *
+ * Adding a field here is a deliberate act: it widens what every check can
+ * depend on, and each field has to be fetched before any check can run.
+ */
+export interface CheckInput {
+  repo: RepoSummary;
+  files: FileIndex;
+  /**
+   * Passed in rather than read from the clock inside a check. Otherwise a test
+   * for "abandoned for two years" would start failing two years from now.
+   */
+  now: Date;
+}
+
+/** Every check has this signature, which is what lets the registry be a plain array. */
+export type Check = (input: CheckInput) => CheckResult;
 
 /** The complete analysis of one repository — the top-level result. */
 export interface RepoAnalysis {

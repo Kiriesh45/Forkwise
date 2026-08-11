@@ -1,5 +1,6 @@
+import { FileIndex } from '../../core/file-index.js';
 import type { LicenseInfo, RepoSummary } from '../../core/types.js';
-import type { GitHubLicense, GitHubRepoResponse } from './api-types.js';
+import type { GitHubLicense, GitHubRepoResponse, GitHubTreeResponse } from './api-types.js';
 
 /** GitHub's placeholder for a license file it found but could not identify. */
 const UNIDENTIFIED = 'NOASSERTION';
@@ -26,6 +27,15 @@ export function toRepoSummary(response: GitHubRepoResponse): RepoSummary {
     isArchived: response.archived,
     isFork: response.fork,
   };
+}
+
+/**
+ * Only blobs become entries: a directory named `LICENSE` is not a license, and
+ * a submodule (`type: 'commit'`) has no contents we can see at all.
+ */
+export function toFileIndex(tree: GitHubTreeResponse): FileIndex {
+  const filePaths = tree.tree.filter((entry) => entry.type === 'blob').map((entry) => entry.path);
+  return new FileIndex(filePaths, !tree.truncated);
 }
 
 function toLicenseInfo(license: GitHubLicense | null): LicenseInfo {
