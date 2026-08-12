@@ -7,6 +7,9 @@ const weight = 5;
 /** Beyond this the panel becomes a wall of text; the count carries the rest. */
 const MAX_LISTED = 5;
 
+/** Applied only when an advisory is known to be critical or high severity. */
+const SEVERE_CEILING = 50;
+
 /**
  * The only check backed by an external security database rather than by
  * inference, so a finding is a fact and `fail` is justified.
@@ -48,8 +51,20 @@ export const noKnownVulnerabilities: Check = ({ vulnerabilities }) => {
       { text: coverage },
     ],
     fix: 'Update the affected packages, or check whether a patched release exists.',
+    ...(hasSevereFinding(vulnerabilities.vulnerabilities) ? { ceiling: SEVERE_CEILING } : {}),
   };
 };
+
+/**
+ * Only findings we are sure about earn a ceiling. Severity is missing for
+ * advisories beyond the detail-lookup budget, and treating "unknown severity"
+ * as severe would punish repositories for our own request limit.
+ */
+function hasSevereFinding(vulnerabilities: Vulnerability[]): boolean {
+  return vulnerabilities.some(
+    (vulnerability) => vulnerability.severity === 'CRITICAL' || vulnerability.severity === 'HIGH',
+  );
+}
 
 function describe(vulnerability: Vulnerability): Evidence {
   const severity = vulnerability.severity === null ? '' : `${vulnerability.severity}: `;

@@ -29,6 +29,54 @@ describe('noKnownVulnerabilities', () => {
     expect(result.evidence[0]?.url).toContain('GHSA-35jh-r3h4-6jhm');
   });
 
+  it('caps the score for a high severity advisory', () => {
+    const result = noKnownVulnerabilities(
+      makeInput({
+        vulnerabilities: {
+          kind: 'checked',
+          vulnerabilities: [LODASH],
+          packagesChecked: 10,
+          packagesSkipped: 0,
+        },
+      }),
+    );
+
+    expect(result.ceiling).toBe(50);
+  });
+
+  it('does not cap the score for a moderate advisory', () => {
+    const result = noKnownVulnerabilities(
+      makeInput({
+        vulnerabilities: {
+          kind: 'checked',
+          vulnerabilities: [{ ...LODASH, severity: 'MODERATE' }],
+          packagesChecked: 10,
+          packagesSkipped: 0,
+        },
+      }),
+    );
+
+    expect(result.ceiling).toBeUndefined();
+  });
+
+  it('does not cap the score when the severity was never looked up', () => {
+    // Beyond the detail-lookup budget severity is null. That is our limit, not
+    // evidence of a harmless advisory — but it is not evidence of a severe one
+    // either, so it must not decide the score.
+    const result = noKnownVulnerabilities(
+      makeInput({
+        vulnerabilities: {
+          kind: 'checked',
+          vulnerabilities: [{ ...LODASH, severity: null }],
+          packagesChecked: 10,
+          packagesSkipped: 0,
+        },
+      }),
+    );
+
+    expect(result.ceiling).toBeUndefined();
+  });
+
   it('passes when the database knows nothing against the packages it saw', () => {
     const result = noKnownVulnerabilities(
       makeInput({

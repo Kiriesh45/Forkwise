@@ -20,19 +20,6 @@ const CREDIT: Record<Exclude<CheckStatus, 'unknown'>, number> = {
   fail: 0,
 };
 
-/**
- * Failures that cap the final score instead of merely subtracting from it.
- *
- * A weighted average lets nine cosmetic passes bury one fatal finding: an
- * archived repository with good docs scored 64, which reads as "fine". These
- * are the findings where no amount of polish changes the answer, so they set a
- * ceiling the rest of the checks cannot lift.
- */
-const FAILURE_CAPS: Record<string, number> = {
-  'not-archived': 30,
-  'has-license': 45,
-};
-
 export function scoreReport(report: RepoReport): RepoAnalysis {
   return {
     ...report,
@@ -68,10 +55,16 @@ function scoreChecks(checks: CheckResult[]): number | null {
   return Math.min(weighted, ...ceilings(checks));
 }
 
-/** Empty when nothing fatal failed, which leaves the weighted score untouched. */
+/**
+ * Empty when nothing fatal failed, which leaves the weighted score untouched.
+ *
+ * A weighted average otherwise lets nine cosmetic passes bury one fatal
+ * finding: an archived repository with good docs scored 64, which reads as
+ * "fine".
+ */
 function ceilings(checks: CheckResult[]): number[] {
   return checks
     .filter((check) => check.status === 'fail')
-    .map((check) => FAILURE_CAPS[check.id])
-    .filter((cap): cap is number => cap !== undefined);
+    .map((check) => check.ceiling)
+    .filter((ceiling): ceiling is number => ceiling !== undefined);
 }

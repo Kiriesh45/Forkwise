@@ -75,6 +75,16 @@ export interface CheckResult {
   evidence: Evidence[];
   /** Actionable advice. Only meaningful for 'warn' and 'fail'. */
   fix?: string;
+  /**
+   * A score this finding refuses to let the repository exceed, however well it
+   * does elsewhere. Set only for findings where no amount of polish changes
+   * the answer.
+   *
+   * It lives on the result rather than in a table inside the scoring module
+   * because the decision can depend on the data: a critical advisory earns a
+   * ceiling, a low-severity one does not, and only the check can tell.
+   */
+  ceiling?: number;
 }
 
 /** A commit, reduced to the two things activity checks ask about. */

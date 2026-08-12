@@ -30,12 +30,15 @@ score = round(100 * Σ(credit(status) × weight) / Σ(weight))
 credit: pass = 1, warn = 0.5, fail = 0
 ```
 
-Then the score is capped by any fatal failure:
+Then the score is capped by any fatal failure. Ceilings are declared by the
+check that found the problem, not by a table here, because some of them depend
+on the finding itself:
 
-| Failing check  | Ceiling | Why                                                                                                           |
-| -------------- | ------- | ------------------------------------------------------------------------------------------------------------- |
-| `not-archived` | 30      | The owner has stated the project is read-only. Documentation quality cannot change that.                      |
-| `has-license`  | 45      | Without a license the default is "all rights reserved". However good the code is, you may not legally use it. |
+| Failing check                                         | Ceiling | Why                                                                                                                                                                                    |
+| ----------------------------------------------------- | ------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `not-archived`                                        | 30      | The owner has stated the project is read-only. Documentation quality cannot change that.                                                                                               |
+| `has-license`                                         | 45      | Without a license the default is "all rights reserved". However good the code is, you may not legally use it.                                                                          |
+| `no-known-vulnerabilities`, critical or high severity | 50      | Applied only when the severity is known. Moderate, low and unknown severities subtract weight without a ceiling — a limit imposed by our own lookup budget must not read as a verdict. |
 
 `facebookarchive/draft-js` is the case that forced this: nine healthy signals
 averaged out to 64 for a repository abandoned three years earlier.

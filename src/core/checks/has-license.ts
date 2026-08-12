@@ -42,6 +42,8 @@ export const hasLicense: Check = ({ repo }) => {
         status: 'fail',
         evidence: [{ text: 'No license — the code is "all rights reserved" by default' }],
         fix: 'Add a LICENSE file. Without one, nobody may legally reuse this code.',
+        // However good the code is, you may not legally use it.
+        ceiling: 45,
       };
   }
 };

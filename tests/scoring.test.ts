@@ -2,8 +2,15 @@ import { describe, expect, it } from 'vitest';
 import { scoreReport } from '../src/core/scoring.js';
 import type { CheckResult, CheckStatus, RepoReport } from '../src/core/types.js';
 
-function check(id: string, status: CheckStatus, weight: number): CheckResult {
-  return { id, title: id, status, weight, evidence: [] };
+function check(id: string, status: CheckStatus, weight: number, ceiling?: number): CheckResult {
+  return {
+    id,
+    title: id,
+    status,
+    weight,
+    evidence: [],
+    ...(ceiling === undefined ? {} : { ceiling }),
+  };
 }
 
 function report(checks: CheckResult[]): RepoReport {
@@ -53,23 +60,31 @@ describe('scoreReport', () => {
     expect(score).toBeNull();
   });
 
-  it('caps an archived repository however healthy it otherwise looks', () => {
+  it('applies a ceiling declared by a failing check', () => {
     // facebookarchive/draft-js scored 64 before ceilings existed.
     const checks = [
-      check('not-archived', 'fail', 5),
+      check('not-archived', 'fail', 5, 30),
       ...Array.from({ length: 20 }, (_, index) => check(`filler-${index}`, 'pass', 5)),
     ];
 
     expect(scoreReport(report(checks)).score).toBe(30);
   });
 
-  it('caps a repository with no license', () => {
+  it('takes the lowest ceiling when several findings declare one', () => {
     const checks = [
-      check('has-license', 'fail', 5),
+      check('not-archived', 'fail', 5, 30),
+      check('has-license', 'fail', 5, 45),
       ...Array.from({ length: 20 }, (_, index) => check(`filler-${index}`, 'pass', 5)),
     ];
 
-    expect(scoreReport(report(checks)).score).toBe(45);
+    expect(scoreReport(report(checks)).score).toBe(30);
+  });
+
+  it('ignores a ceiling on a check that did not fail', () => {
+    // A check that passes has found nothing to cap the score with.
+    const checks = [check('a', 'pass', 5, 10), check('b', 'warn', 5)];
+
+    expect(scoreReport(report(checks)).score).toBe(75);
   });
 
   it('leaves the weighted score alone when nothing fatal failed', () => {
