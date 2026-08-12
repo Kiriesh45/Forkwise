@@ -1,5 +1,7 @@
 # Forkwise
 
+[![CI](https://github.com/kiresh/forkwise/actions/workflows/ci.yml/badge.svg)](https://github.com/kiresh/forkwise/actions/workflows/ci.yml)
+
 > Know what you're pulling in. A browser extension that scores the health and security of any GitHub repository, right on the page.
 
 **Status: early development (week 1). Not usable yet.**
