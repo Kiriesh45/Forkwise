@@ -13,6 +13,7 @@ const TEST_FILE_PATTERNS = [
   /^test_[^/]+\.py$/, //       test_foo.py
   /_test\.(go|py|rb)$/, //     foo_test.go
   /test\.java$/, //            FooTest.java
+  /^tests?\.[a-z]+$/, //       test.js — the whole suite in one file, common in small packages
 ];
 
 /**

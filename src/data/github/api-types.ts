@@ -34,6 +34,16 @@ export interface GitHubRepoResponse {
   fork: boolean;
 }
 
+/** One entry of GET /repos/{owner}/{repo}/commits */
+export interface GitHubCommitListItem {
+  /** The commit's own metadata, which exists even for authors without an account. */
+  commit: {
+    author: { name: string; date: string } | null;
+  };
+  /** The GitHub account behind the commit, null when the email matches nobody. */
+  author: { login: string } | null;
+}
+
 export interface GitHubTreeEntry {
   /** Full path from the repository root, e.g. ".github/workflows/ci.yml". */
   path: string;

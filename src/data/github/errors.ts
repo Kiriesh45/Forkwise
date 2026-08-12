@@ -23,6 +23,17 @@ export class RateLimited extends GitHubApiError {
   }
 }
 
+/**
+ * 409 — the repository exists but has no commits yet. GitHub reports this for
+ * trees and commits alike, and it is an answer rather than a failure.
+ */
+export class RepoIsEmpty extends GitHubApiError {
+  constructor() {
+    super('The repository has no commits yet');
+    this.name = 'RepoIsEmpty';
+  }
+}
+
 /** 401 — the stored token is expired or revoked. */
 export class InvalidToken extends GitHubApiError {
   constructor() {

@@ -1,13 +1,24 @@
-import type { GitHubRepoResponse, GitHubTreeResponse } from './api-types.js';
+import type {
+  GitHubCommitListItem,
+  GitHubRepoResponse,
+  GitHubTreeResponse,
+} from './api-types.js';
 import {
   GitHubApiError,
   GitHubUnavailable,
   InvalidToken,
   RateLimited,
+  RepoIsEmpty,
   RepoNotFound,
 } from './errors.js';
 
 const API_ROOT = 'https://api.github.com';
+
+/**
+ * How many recent commits we look at. One page is one request; asking for more
+ * would cost another out of an hourly budget of 60.
+ */
+export const COMMIT_SAMPLE_SIZE = 100;
 
 /** GitHub can hang; a side panel that never resolves looks broken. */
 const REQUEST_TIMEOUT_MS = 10_000;
@@ -46,7 +57,30 @@ export class GitHubClient {
    */
   async fetchTree(owner: string, repo: string, branch: string): Promise<GitHubTreeResponse> {
     const path = `/repos/${segment(owner)}/${segment(repo)}/git/trees/${segment(branch)}?recursive=1`;
-    return this.request(path, new RepoNotFound(owner, repo));
+    try {
+      return await this.request(path, new RepoNotFound(owner, repo));
+    } catch (error) {
+      // A repository with no commits has no files. That is a result, not a fault.
+      if (error instanceof RepoIsEmpty) {
+        return { tree: [], truncated: false };
+      }
+      throw error;
+    }
+  }
+
+  /** Newest first, one page deep. */
+  async fetchCommits(owner: string, repo: string, branch: string): Promise<GitHubCommitListItem[]> {
+    const path =
+      `/repos/${segment(owner)}/${segment(repo)}/commits` +
+      `?sha=${segment(branch)}&per_page=${COMMIT_SAMPLE_SIZE}`;
+    try {
+      return await this.request(path, new RepoNotFound(owner, repo));
+    } catch (error) {
+      if (error instanceof RepoIsEmpty) {
+        return [];
+      }
+      throw error;
+    }
   }
 
   private async request<T>(path: string, notFound: GitHubApiError): Promise<T> {
@@ -96,6 +130,8 @@ export class GitHubClient {
         return retryAfter(response) ?? new GitHubUnavailable(`HTTP ${response.status}`);
       case 404:
         return notFound;
+      case 409:
+        return new RepoIsEmpty();
       default:
         return new GitHubUnavailable(`HTTP ${response.status}`);
     }

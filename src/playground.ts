@@ -2,11 +2,9 @@
  * Scratch runner. `npm run play -- owner/repo` — nothing here ships.
  */
 
-import { allChecks } from './core/checks/index.js';
-import type { CheckInput } from './core/types.js';
+import { analyzeRepo } from './analysis/analyze-repo.js';
 import { GitHubClient } from './data/github/client.js';
 import { GitHubApiError } from './data/github/errors.js';
-import { toFileIndex, toRepoSummary } from './data/github/mappers.js';
 
 const [owner, repo] = (process.argv[2] ?? 'react/react').split('/');
 
@@ -18,18 +16,12 @@ if (!owner || !repo) {
 const client = new GitHubClient(process.env.GITHUB_TOKEN);
 
 try {
-  const repoSummary = toRepoSummary(await client.fetchRepo(owner, repo));
-  const files = toFileIndex(
-    await client.fetchTree(repoSummary.owner, repoSummary.name, repoSummary.defaultBranch),
-  );
+  const report = await analyzeRepo(client, owner, repo);
 
-  const input: CheckInput = { repo: repoSummary, files, now: new Date() };
-
-  console.log(`\n${repoSummary.owner}/${repoSummary.name}\n`);
-  for (const check of allChecks) {
-    const result = check(input);
-    console.log(`[${result.status.padEnd(7)}] ${result.title}`);
-    for (const evidence of result.evidence) {
+  console.log(`\n${report.repo.owner}/${report.repo.name}\n`);
+  for (const check of report.checks) {
+    console.log(`[${check.status.padEnd(7)}] ${check.title}`);
+    for (const evidence of check.evidence) {
       console.log(`            ${evidence.text}`);
     }
   }

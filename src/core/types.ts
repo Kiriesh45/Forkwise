@@ -79,6 +79,23 @@ export interface CheckResult {
   fix?: string;
 }
 
+/** A commit, reduced to the two things activity checks ask about. */
+export interface CommitSummary {
+  /** GitHub login when the commit maps to an account, otherwise the author name. */
+  author: string;
+  committedAt: string;
+}
+
+export interface CommitHistory {
+  /** Newest first. */
+  commits: CommitSummary[];
+  /**
+   * True when the sample filled a whole page, so older commits exist that we
+   * did not look at. Any count derived from this is a lower bound.
+   */
+  isTruncated: boolean;
+}
+
 /**
  * Everything a check is allowed to look at.
  *
@@ -88,6 +105,7 @@ export interface CheckResult {
 export interface CheckInput {
   repo: RepoSummary;
   files: FileIndex;
+  history: CommitHistory;
   /**
    * Passed in rather than read from the clock inside a check. Otherwise a test
    * for "abandoned for two years" would start failing two years from now.
@@ -98,14 +116,18 @@ export interface CheckInput {
 /** Every check has this signature, which is what lets the registry be a plain array. */
 export type Check = (input: CheckInput) => CheckResult;
 
-/** The complete analysis of one repository — the top-level result. */
-export interface RepoAnalysis {
+/** Everything gathered and judged, before scoring turns it into a number. */
+export interface RepoReport {
   repo: RepoSummary;
   checks: CheckResult[];
-  /** 0-100, derived from checks. Never stored, always recomputed. */
+  /** When this report was produced (ISO 8601). Drives cache expiry. */
+  generatedAt: string;
+}
+
+/** A report plus its score — the top-level result the panel renders. */
+export interface RepoAnalysis extends RepoReport {
+  /** 0-100, derived from checks. Never stored alongside them, always recomputed. */
   score: number;
   /** Version of the scoring model, so old cached results can be invalidated. */
   scoringVersion: string;
-  /** When this analysis was produced (ISO 8601). Drives cache expiry. */
-  generatedAt: string;
 }

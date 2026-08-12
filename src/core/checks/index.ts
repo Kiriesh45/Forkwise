@@ -1,4 +1,5 @@
 import type { Check } from '../types.js';
+import { activeContributors } from './active-contributors.js';
 import { hasCi } from './has-ci.js';
 import { hasContributing } from './has-contributing.js';
 import { hasDescription } from './has-description.js';
@@ -20,6 +21,7 @@ export const allChecks: Check[] = [
   notArchived,
   hasLicense,
   recentActivity,
+  activeContributors,
   hasTests,
   hasCi,
   hasReadme,

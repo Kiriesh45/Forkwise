@@ -1,6 +1,12 @@
 import { FileIndex } from '../../core/file-index.js';
-import type { LicenseInfo, RepoSummary } from '../../core/types.js';
-import type { GitHubLicense, GitHubRepoResponse, GitHubTreeResponse } from './api-types.js';
+import type { CommitHistory, LicenseInfo, RepoSummary } from '../../core/types.js';
+import type {
+  GitHubCommitListItem,
+  GitHubLicense,
+  GitHubRepoResponse,
+  GitHubTreeResponse,
+} from './api-types.js';
+import { COMMIT_SAMPLE_SIZE } from './client.js';
 
 /** GitHub's placeholder for a license file it found but could not identify. */
 const UNIDENTIFIED = 'NOASSERTION';
@@ -36,6 +42,20 @@ export function toRepoSummary(response: GitHubRepoResponse): RepoSummary {
 export function toFileIndex(tree: GitHubTreeResponse): FileIndex {
   const filePaths = tree.tree.filter((entry) => entry.type === 'blob').map((entry) => entry.path);
   return new FileIndex(filePaths, !tree.truncated);
+}
+
+/**
+ * Prefers the GitHub login over the name written into the commit: the same
+ * person commits as "Ada", "ada" and "Ada Lovelace" over a project's life, and
+ * counting those as three maintainers would flatter every repository.
+ */
+export function toCommitHistory(items: GitHubCommitListItem[]): CommitHistory {
+  const commits = items.map((item) => ({
+    author: item.author?.login ?? item.commit.author?.name ?? 'unknown',
+    committedAt: item.commit.author?.date ?? '',
+  }));
+
+  return { commits, isTruncated: items.length >= COMMIT_SAMPLE_SIZE };
 }
 
 function toLicenseInfo(license: GitHubLicense | null): LicenseInfo {
