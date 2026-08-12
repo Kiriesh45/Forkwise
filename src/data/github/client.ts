@@ -15,9 +15,7 @@ import {
  * instead of collapsing into null.
  */
 export type FetchedFile =
-  | { kind: 'found'; text: string }
-  | { kind: 'absent' }
-  | { kind: 'too-large'; bytes: number };
+  { kind: 'found'; text: string } | { kind: 'absent' } | { kind: 'too-large'; bytes: number };
 
 /**
  * The panel runs inside the browser. A multi-megabyte lock file parsed into

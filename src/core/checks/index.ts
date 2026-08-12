@@ -7,6 +7,7 @@ import { hasLicense } from './has-license.js';
 import { hasReadme } from './has-readme.js';
 import { hasSecurityPolicy } from './has-security-policy.js';
 import { hasTests } from './has-tests.js';
+import { noKnownVulnerabilities } from './no-known-vulnerabilities.js';
 import { notArchived } from './not-archived.js';
 import { recentActivity } from './recent-activity.js';
 
@@ -19,6 +20,7 @@ import { recentActivity } from './recent-activity.js';
  */
 export const allChecks: Check[] = [
   notArchived,
+  noKnownVulnerabilities,
   hasLicense,
   recentActivity,
   activeContributors,

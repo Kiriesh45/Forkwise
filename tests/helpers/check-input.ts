@@ -4,6 +4,7 @@ import type {
   CommitSummary,
   DependencyInfo,
   RepoSummary,
+  VulnerabilityInfo,
 } from '../../src/core/types.js';
 
 /** A repository with nothing wrong with it, so each test can break one thing. */
@@ -36,6 +37,7 @@ export interface InputOverrides {
   commits?: CommitSummary[];
   commitsTruncated?: boolean;
   dependencies?: DependencyInfo;
+  vulnerabilities?: VulnerabilityInfo;
   now?: Date;
 }
 
@@ -48,6 +50,10 @@ export function makeInput(overrides: InputOverrides = {}): CheckInput {
       isTruncated: overrides.commitsTruncated ?? false,
     },
     dependencies: overrides.dependencies ?? { kind: 'not-applicable' },
+    vulnerabilities: overrides.vulnerabilities ?? {
+      kind: 'not-checked',
+      reason: 'not exercised by this test',
+    },
     now: overrides.now ?? NOW,
   };
 }

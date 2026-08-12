@@ -111,6 +111,28 @@ export type DependencyInfo =
   | { kind: 'unavailable'; reason: string }
   | { kind: 'resolved'; dependencies: Dependency[]; fromLockfile: boolean };
 
+export interface Vulnerability {
+  /** OSV or GHSA identifier, e.g. "GHSA-35jh-r3h4-6jhm". */
+  id: string;
+  packageName: string;
+  /** "CRITICAL", "HIGH", "MODERATE", "LOW" — null when the advisory omits it. */
+  severity: string | null;
+  summary: string | null;
+  url: string;
+}
+
+/** What we could establish about known vulnerabilities in the dependencies. */
+export type VulnerabilityInfo =
+  | { kind: 'not-checked'; reason: string }
+  | {
+      kind: 'checked';
+      vulnerabilities: Vulnerability[];
+      /** How many packages we had exact versions for and actually queried. */
+      packagesChecked: number;
+      /** Declared packages we had to skip, because their version was a range. */
+      packagesSkipped: number;
+    };
+
 /**
  * Everything a check is allowed to look at.
  *
@@ -122,6 +144,7 @@ export interface CheckInput {
   files: FileIndex;
   history: CommitHistory;
   dependencies: DependencyInfo;
+  vulnerabilities: VulnerabilityInfo;
   /**
    * Passed in rather than read from the clock inside a check. Otherwise a test
    * for "abandoned for two years" would start failing two years from now.
