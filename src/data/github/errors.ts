@@ -9,7 +9,10 @@ export abstract class GitHubApiError extends Error {}
 
 /** 404, and also what a private repository looks like to an anonymous caller. */
 export class RepoNotFound extends GitHubApiError {
-  constructor(readonly owner: string, readonly repo: string) {
+  constructor(
+    readonly owner: string,
+    readonly repo: string,
+  ) {
     super(`Repository ${owner}/${repo} not found, or not visible to you`);
     this.name = 'RepoNotFound';
   }
@@ -31,6 +34,14 @@ export class RepoIsEmpty extends GitHubApiError {
   constructor() {
     super('The repository has no commits yet');
     this.name = 'RepoIsEmpty';
+  }
+}
+
+/** 404 on a file path, as opposed to the repository itself. */
+export class FileNotFound extends GitHubApiError {
+  constructor(readonly path: string) {
+    super(`No file at ${path}`);
+    this.name = 'FileNotFound';
   }
 }
 

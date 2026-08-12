@@ -5,6 +5,7 @@
 import { analyzeRepo } from './analysis/analyze-repo.js';
 import { GitHubClient } from './data/github/client.js';
 import { GitHubApiError } from './data/github/errors.js';
+import { parseDependencies } from './data/npm/dependencies.js';
 
 const [owner, repo] = (process.argv[2] ?? 'react/react').split('/');
 
@@ -24,6 +25,36 @@ try {
     for (const evidence of check.evidence) {
       console.log(`            ${evidence.text}`);
     }
+  }
+  // Temporary probe: dependencies are not part of the report until the
+  // vulnerability check exists to carry them.
+  const manifest = await client.fetchTextFile(
+    report.repo.owner,
+    report.repo.name,
+    'package.json',
+    report.repo.defaultBranch,
+  );
+  const lock = await client.fetchTextFile(
+    report.repo.owner,
+    report.repo.name,
+    'package-lock.json',
+    report.repo.defaultBranch,
+  );
+
+  if (manifest.kind === 'found') {
+    const info = parseDependencies(manifest.text, lock.kind === 'found' ? lock.text : null);
+    if (info.kind === 'resolved') {
+      const known = info.dependencies.filter((dependency) => dependency.version !== null);
+      console.log(
+        `\ndependencies: ${info.dependencies.length} direct, ${known.length} with a known version` +
+          ` (lockfile: ${info.fromLockfile})`,
+      );
+      console.log(info.dependencies.slice(0, 5));
+    } else {
+      console.log('\ndependencies:', info);
+    }
+  } else {
+    console.log('\ndependencies: no package.json');
   }
 } catch (error) {
   if (error instanceof GitHubApiError) {

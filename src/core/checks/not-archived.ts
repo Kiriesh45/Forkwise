@@ -19,7 +19,9 @@ export const notArchived: Check = ({ repo }) => {
     title,
     weight,
     status: 'fail',
-    evidence: [{ text: 'The owner archived this repository: it is read-only and will not be fixed' }],
+    evidence: [
+      { text: 'The owner archived this repository: it is read-only and will not be fixed' },
+    ],
     fix: 'Look for a maintained fork before depending on this.',
   };
 };

@@ -5,18 +5,18 @@ browser extension → UI. Every stage before stage 6 runs in plain Node and is
 verifiable from the terminal. Debugging inside a browser extension is slow, so
 we keep as much logic as possible outside of it.
 
-| # | Stage | Deliverable | Runs in |
-| --- | --- | --- | --- |
-| 0 | Skeleton & domain types | `src/core/types.ts` | — |
-| 1 | GitHub data layer | Real repo → `RepoSummary` + file tree | Node |
-| 2 | Checks | 10 pure check functions | Node |
-| 3 | Scoring | `RepoAnalysis` with a 0–100 score | Node |
-| 4 | Tests & CI | Vitest suite, green GitHub Actions | CI |
-| 5 | Dependency scanning | OSV.dev advisories for `package.json` | Node |
-| 6 | Extension shell | WXT build, side panel opens on GitHub | Chrome |
-| 7 | Cache & settings | `chrome.storage`, TTL, optional token | Chrome |
-| 8 | UI | Score, checks, evidence, error states | Chrome |
-| 9 | Release prep | Icons, docs, store listing, `v0.1.0` | — |
+| #   | Stage                   | Deliverable                           | Runs in |
+| --- | ----------------------- | ------------------------------------- | ------- |
+| 0   | Skeleton & domain types | `src/core/types.ts`                   | —       |
+| 1   | GitHub data layer       | Real repo → `RepoSummary` + file tree | Node    |
+| 2   | Checks                  | 10 pure check functions               | Node    |
+| 3   | Scoring                 | `RepoAnalysis` with a 0–100 score     | Node    |
+| 4   | Tests & CI              | Vitest suite, green GitHub Actions    | CI      |
+| 5   | Dependency scanning     | OSV.dev advisories for `package.json` | Node    |
+| 6   | Extension shell         | WXT build, side panel opens on GitHub | Chrome  |
+| 7   | Cache & settings        | `chrome.storage`, TTL, optional token | Chrome  |
+| 8   | UI                      | Score, checks, evidence, error states | Chrome  |
+| 9   | Release prep            | Icons, docs, store listing, `v0.1.0`  | —       |
 
 ## Stage detail
 

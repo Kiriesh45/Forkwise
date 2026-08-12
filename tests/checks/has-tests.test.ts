@@ -40,9 +40,7 @@ describe('hasTests', () => {
   });
 
   it('prefers the strongest evidence it can find', () => {
-    const result = hasTests(
-      makeInput({ files: ['tests/helper.ts', 'src/parser.test.ts'] }),
-    );
+    const result = hasTests(makeInput({ files: ['tests/helper.ts', 'src/parser.test.ts'] }));
 
     expect(result.evidence[0]?.text).toContain('src/parser.test.ts');
   });

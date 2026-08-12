@@ -19,9 +19,7 @@ import type { FileIndex } from './file-index.js';
  * legally not reusable — which is the worst case, not the neutral one.
  */
 export type LicenseInfo =
-  | { kind: 'spdx'; id: string }
-  | { kind: 'unidentified' }
-  | { kind: 'none' };
+  { kind: 'spdx'; id: string } | { kind: 'unidentified' } | { kind: 'none' };
 
 /** A repository, reduced to what Forkwise actually needs. */
 export interface RepoSummary {
@@ -96,6 +94,23 @@ export interface CommitHistory {
   isTruncated: boolean;
 }
 
+export interface Dependency {
+  name: string;
+  /**
+   * The exact version that would be installed, or null when the manifest only
+   * gives a range and no lock file resolved it. Never guessed: "^18.2.0" can
+   * install anything from 18.2.0 to 18.99.99, and picking one would turn a
+   * vulnerability report into a coin toss.
+   */
+  version: string | null;
+}
+
+/** What we could establish about a repository's npm dependencies. */
+export type DependencyInfo =
+  | { kind: 'not-applicable' }
+  | { kind: 'unavailable'; reason: string }
+  | { kind: 'resolved'; dependencies: Dependency[]; fromLockfile: boolean };
+
 /**
  * Everything a check is allowed to look at.
  *
@@ -106,6 +121,7 @@ export interface CheckInput {
   repo: RepoSummary;
   files: FileIndex;
   history: CommitHistory;
+  dependencies: DependencyInfo;
   /**
    * Passed in rather than read from the clock inside a check. Otherwise a test
    * for "abandoned for two years" would start failing two years from now.

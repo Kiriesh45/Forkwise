@@ -28,8 +28,8 @@ No account. No backend. No telemetry. Requests go only to `api.github.com` and
 
 ## Status
 
-| Milestone | State |
-| --- | --- |
+| Milestone    | State       |
+| ------------ | ----------- |
 | v0.1.0 — MVP | in progress |
 
 See the [roadmap](https://github.com/kiresh/forkwise/issues) for details.

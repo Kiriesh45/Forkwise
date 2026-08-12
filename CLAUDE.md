@@ -32,8 +32,8 @@ Working agreement:
 1. **You write the code, the author reviews it.** Do not assign large writing
    exercises. The author learns by reading and questioning working code.
 2. **Explain before and after, not instead.** Every chunk of code comes with:
-   what it does, where it sits in the architecture, and *why it is built this
-   way rather than the obvious alternative*. The "why" matters most — that is
+   what it does, where it sits in the architecture, and _why it is built this
+   way rather than the obvious alternative_. The "why" matters most — that is
    the part that cannot be looked up.
 3. **Small steps.** One coherent piece per turn, then stop and check
    understanding. Never dump a whole stage at once.
@@ -74,7 +74,7 @@ The author must be able to defend every line of this repository in an
 interview. Code that reads as machine-generated boilerplate fails that test
 even when it works. Concretely:
 
-- **Comments explain *why*, never *what*.** A comment that restates the code
+- **Comments explain _why_, never _what_.** A comment that restates the code
   below it is deleted. Good comments record a trap, a rejected alternative, or
   a fact about the outside world — e.g. GitHub's `open_issues_count` including
   pull requests.
@@ -118,9 +118,11 @@ Process rules that support this:
 ## Commands
 
 ```bash
-npm run typecheck   # tsc --noEmit, must be green before committing
-npm run play        # scratch runner, src/playground.ts
-npm run lesson      # TypeScript teaching file, src/lessons/
+npm run format:check   # prettier
+npm run lint           # eslint, type-aware rules
+npm run typecheck      # tsc --noEmit
+npm test               # vitest
+npm run play -- owner/repo   # scratch runner against the live API
 ```
 
 ## Hard constraints to keep in mind
@@ -143,7 +145,6 @@ analysis, telemetry. These are v0.2+ and should not be started early.
 
 <!-- Keep this section updated: rewrite it at the end of every stage so a fresh
      session knows exactly where the work stands. -->
-
 
 Stages 0, 1 and 2 complete.
 

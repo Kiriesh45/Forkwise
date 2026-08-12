@@ -1,5 +1,10 @@
 import { FileIndex } from '../../src/core/file-index.js';
-import type { CheckInput, CommitSummary, RepoSummary } from '../../src/core/types.js';
+import type {
+  CheckInput,
+  CommitSummary,
+  DependencyInfo,
+  RepoSummary,
+} from '../../src/core/types.js';
 
 /** A repository with nothing wrong with it, so each test can break one thing. */
 const HEALTHY_REPO: RepoSummary = {
@@ -30,6 +35,7 @@ export interface InputOverrides {
   treeComplete?: boolean;
   commits?: CommitSummary[];
   commitsTruncated?: boolean;
+  dependencies?: DependencyInfo;
   now?: Date;
 }
 
@@ -41,6 +47,7 @@ export function makeInput(overrides: InputOverrides = {}): CheckInput {
       commits: overrides.commits ?? [],
       isTruncated: overrides.commitsTruncated ?? false,
     },
+    dependencies: overrides.dependencies ?? { kind: 'not-applicable' },
     now: overrides.now ?? NOW,
   };
 }

@@ -22,6 +22,8 @@ const TEST_FILE_PATTERNS = [
  * still matched `Documentation/netlink/specs/index.rst`. Anything unlisted is
  * treated as "not a test", which is the safe direction for a heuristic.
  */
+// Grouped by ecosystem: easier to scan, and easier to see what is missing.
+// prettier-ignore
 const CODE_EXTENSIONS = [
   'ts', 'tsx', 'js', 'jsx', 'mjs', 'cjs',
   'py', 'rb', 'go', 'rs', 'java', 'kt', 'swift', 'scala',

@@ -11,7 +11,14 @@ import { makeInput } from './helpers/check-input.js';
  */
 function documentedWeights(): Map<string, number> {
   const markdown = readFileSync(new URL('../docs/scoring.md', import.meta.url), 'utf8');
-  const rows = markdown.matchAll(/^\| `([a-z-]+)` \| (\d+) \|/gm);
+
+  // Only the Weights section. The ceilings table above it has the same shape,
+  // and reading both left the result depending on which came last in the file.
+  const weightsSection = markdown.split('## Weights').at(1) ?? '';
+
+  // Tolerant of padding: Prettier aligns markdown table columns, and a test
+  // that breaks when the formatter runs is a test nobody keeps.
+  const rows = weightsSection.matchAll(/^\|\s*`([a-z-]+)`\s*\|\s*(\d+)\s*\|/gm);
 
   return new Map([...rows].map(([, id, weight]) => [id as string, Number(weight)]));
 }

@@ -1,9 +1,6 @@
-import type {
-  GitHubCommitListItem,
-  GitHubRepoResponse,
-  GitHubTreeResponse,
-} from './api-types.js';
+import type { GitHubCommitListItem, GitHubRepoResponse, GitHubTreeResponse } from './api-types.js';
 import {
+  FileNotFound,
   GitHubApiError,
   GitHubUnavailable,
   InvalidToken,
@@ -11,6 +8,22 @@ import {
   RepoIsEmpty,
   RepoNotFound,
 } from './errors.js';
+
+/**
+ * A file we asked for, and what actually came back. "Absent" and "too big to
+ * read" lead to different messages in the panel, so they stay distinguishable
+ * instead of collapsing into null.
+ */
+export type FetchedFile =
+  | { kind: 'found'; text: string }
+  | { kind: 'absent' }
+  | { kind: 'too-large'; bytes: number };
+
+/**
+ * The panel runs inside the browser. A multi-megabyte lock file parsed into
+ * memory there costs more than the answer is worth.
+ */
+const MAX_FILE_BYTES = 4_000_000;
 
 const API_ROOT = 'https://api.github.com';
 
@@ -83,9 +96,47 @@ export class GitHubClient {
     }
   }
 
+  /**
+   * Raw media type, not the JSON one: the JSON representation base64-encodes
+   * the file, which inflates it by a third and then has to be decoded.
+   */
+  async fetchTextFile(
+    owner: string,
+    repo: string,
+    path: string,
+    ref: string,
+  ): Promise<FetchedFile> {
+    const url =
+      `/repos/${segment(owner)}/${segment(repo)}/contents/` +
+      `${path.split('/').map(segment).join('/')}?ref=${segment(ref)}`;
+
+    let response: Response;
+    try {
+      response = await this.send(url, 'application/vnd.github.raw', new FileNotFound(path));
+    } catch (error) {
+      if (error instanceof FileNotFound) {
+        return { kind: 'absent' };
+      }
+      throw error;
+    }
+
+    const declaredSize = Number(response.headers.get('content-length') ?? 0);
+    if (declaredSize > MAX_FILE_BYTES) {
+      return { kind: 'too-large', bytes: declaredSize };
+    }
+
+    return { kind: 'found', text: await response.text() };
+  }
+
   private async request<T>(path: string, notFound: GitHubApiError): Promise<T> {
+    const response = await this.send(path, 'application/vnd.github+json', notFound);
+    // Asserted, not validated. See docs/decisions/0001-no-runtime-validation.md.
+    return (await response.json()) as T;
+  }
+
+  private async send(path: string, accept: string, notFound: GitHubApiError): Promise<Response> {
     const headers: Record<string, string> = {
-      Accept: 'application/vnd.github+json',
+      Accept: accept,
       'X-GitHub-Api-Version': '2022-11-28',
     };
     if (this.token) {
@@ -108,12 +159,11 @@ export class GitHubClient {
 
     this.latestRateLimit = readRateLimit(response.headers) ?? this.latestRateLimit;
 
-    if (response.ok) {
-      // Asserted, not validated. See docs/decisions/0001-no-runtime-validation.md.
-      return (await response.json()) as T;
+    if (!response.ok) {
+      throw this.errorFor(response, notFound);
     }
 
-    throw this.errorFor(response, notFound);
+    return response;
   }
 
   private errorFor(response: Response, notFound: GitHubApiError): GitHubApiError {

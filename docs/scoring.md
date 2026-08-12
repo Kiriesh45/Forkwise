@@ -32,10 +32,10 @@ credit: pass = 1, warn = 0.5, fail = 0
 
 Then the score is capped by any fatal failure:
 
-| Failing check | Ceiling | Why |
-| --- | --- | --- |
-| `not-archived` | 30 | The owner has stated the project is read-only. Documentation quality cannot change that. |
-| `has-license` | 45 | Without a license the default is "all rights reserved". However good the code is, you may not legally use it. |
+| Failing check  | Ceiling | Why                                                                                                           |
+| -------------- | ------- | ------------------------------------------------------------------------------------------------------------- |
+| `not-archived` | 30      | The owner has stated the project is read-only. Documentation quality cannot change that.                      |
+| `has-license`  | 45      | Without a license the default is "all rights reserved". However good the code is, you may not legally use it. |
 
 `facebookarchive/draft-js` is the case that forced this: nine healthy signals
 averaged out to 64 for a repository abandoned three years earlier.
@@ -44,18 +44,18 @@ averaged out to 64 for a repository abandoned three years earlier.
 
 Weights live next to each check, in `src/core/checks/`.
 
-| Check | Weight | Reasoning |
-| --- | --- | --- |
-| `not-archived` | 5 | Stated by the owner, not inferred. Decides the answer on its own. |
-| `has-license` | 5 | Legal blocker, binary, verifiable. |
-| `recent-activity` | 4 | The strongest available proxy for "will a bug get fixed". |
-| `has-tests` | 4 | Predicts whether a release will quietly break dependents. |
-| `has-ci` | 3 | Tests that nobody runs automatically are tests that rot. |
-| `active-contributors` | 3 | Bus factor. Sampled, so treated as a lower bound. |
-| `has-readme` | 3 | Absence usually means the project was never meant to be used by others. |
-| `has-security-policy` | 2 | Maturity signal; common to lack even in healthy projects. |
-| `has-contributing` | 1 | Matters to contributors more than to consumers. |
-| `has-description` | 1 | Cheapest possible signal of care. |
+| Check                 | Weight | Reasoning                                                               |
+| --------------------- | ------ | ----------------------------------------------------------------------- |
+| `not-archived`        | 5      | Stated by the owner, not inferred. Decides the answer on its own.       |
+| `has-license`         | 5      | Legal blocker, binary, verifiable.                                      |
+| `recent-activity`     | 4      | The strongest available proxy for "will a bug get fixed".               |
+| `has-tests`           | 4      | Predicts whether a release will quietly break dependents.               |
+| `has-ci`              | 3      | Tests that nobody runs automatically are tests that rot.                |
+| `active-contributors` | 3      | Bus factor. Sampled, so treated as a lower bound.                       |
+| `has-readme`          | 3      | Absence usually means the project was never meant to be used by others. |
+| `has-security-policy` | 2      | Maturity signal; common to lack even in healthy projects.               |
+| `has-contributing`    | 1      | Matters to contributors more than to consumers.                         |
+| `has-description`     | 1      | Cheapest possible signal of care.                                       |
 
 The reasoning column is the important one. The numbers are a first calibration
 and will move; the argument for why one check outranks another should not.
