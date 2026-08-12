@@ -31,6 +31,19 @@ export class FileIndex {
     return null;
   }
 
+  /**
+   * The first path matching the predicate, for checks that recognise a shape
+   * rather than a name — `*.test.ts` anywhere, for instance.
+   */
+  findMatching(predicate: (path: string) => boolean): string | null {
+    for (const path of this.byLowercasePath.values()) {
+      if (predicate(path)) {
+        return path;
+      }
+    }
+    return null;
+  }
+
   /** True when at least one file lives under this directory. */
   hasUnder(directory: string): boolean {
     const prefix = `${directory.toLowerCase()}/`;

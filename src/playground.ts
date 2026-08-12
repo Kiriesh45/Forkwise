@@ -2,6 +2,8 @@
  * Scratch runner. `npm run play -- owner/repo` — nothing here ships.
  */
 
+import { allChecks } from './core/checks/index.js';
+import type { CheckInput } from './core/types.js';
 import { GitHubClient } from './data/github/client.js';
 import { GitHubApiError } from './data/github/errors.js';
 import { toFileIndex, toRepoSummary } from './data/github/mappers.js';
@@ -16,17 +18,21 @@ if (!owner || !repo) {
 const client = new GitHubClient(process.env.GITHUB_TOKEN);
 
 try {
-  const summary = toRepoSummary(await client.fetchRepo(owner, repo));
+  const repoSummary = toRepoSummary(await client.fetchRepo(owner, repo));
   const files = toFileIndex(
-    await client.fetchTree(summary.owner, summary.name, summary.defaultBranch),
+    await client.fetchTree(repoSummary.owner, repoSummary.name, repoSummary.defaultBranch),
   );
 
-  console.log(`${summary.owner}/${summary.name} — license:`, summary.license);
-  console.log('tree complete:', files.isComplete);
-  console.log('readme:      ', files.find('README.md', 'readme.md', 'README'));
-  console.log('license file:', files.find('LICENSE', 'LICENSE.md', 'LICENCE'));
-  console.log('security:    ', files.find('SECURITY.md', '.github/SECURITY.md'));
-  console.log('workflows:   ', files.hasUnder('.github/workflows'));
+  const input: CheckInput = { repo: repoSummary, files, now: new Date() };
+
+  console.log(`\n${repoSummary.owner}/${repoSummary.name}\n`);
+  for (const check of allChecks) {
+    const result = check(input);
+    console.log(`[${result.status.padEnd(7)}] ${result.title}`);
+    for (const evidence of result.evidence) {
+      console.log(`            ${evidence.text}`);
+    }
+  }
 } catch (error) {
   if (error instanceof GitHubApiError) {
     console.error(`${error.name}: ${error.message}`);
@@ -35,4 +41,4 @@ try {
   }
 }
 
-console.log('rate limit:', client.rateLimit);
+console.log('\nrate limit:', client.rateLimit);
