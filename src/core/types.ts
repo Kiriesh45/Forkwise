@@ -126,8 +126,12 @@ export interface RepoReport {
 
 /** A report plus its score — the top-level result the panel renders. */
 export interface RepoAnalysis extends RepoReport {
-  /** 0-100, derived from checks. Never stored alongside them, always recomputed. */
-  score: number;
+  /**
+   * 0-100, derived from checks and always recomputed rather than stored beside
+   * them. Null when every check came back `unknown` and there is nothing to
+   * score.
+   */
+  score: number | null;
   /** Version of the scoring model, so old cached results can be invalidated. */
   scoringVersion: string;
 }

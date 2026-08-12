@@ -1,5 +1,6 @@
 import { allChecks } from '../core/checks/index.js';
-import type { CheckInput, RepoReport } from '../core/types.js';
+import { scoreReport } from '../core/scoring.js';
+import type { CheckInput, RepoAnalysis } from '../core/types.js';
 import type { GitHubClient } from '../data/github/client.js';
 import { toCommitHistory, toFileIndex, toRepoSummary } from '../data/github/mappers.js';
 
@@ -15,7 +16,7 @@ export async function analyzeRepo(
   owner: string,
   repo: string,
   now = new Date(),
-): Promise<RepoReport> {
+): Promise<RepoAnalysis> {
   const summary = toRepoSummary(await client.fetchRepo(owner, repo));
 
   // Both depend on the canonical names, and neither depends on the other, so
@@ -32,9 +33,9 @@ export async function analyzeRepo(
     now,
   };
 
-  return {
+  return scoreReport({
     repo: summary,
     checks: allChecks.map((check) => check(input)),
     generatedAt: now.toISOString(),
-  };
+  });
 }

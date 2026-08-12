@@ -153,10 +153,6 @@ Stages 0, 1 and 2 complete.
   `RepoReport`. Three API requests per analysis.
 - `npm run play -- owner/repo` prints every check result.
 
-Open calibration question: `active-contributors` reports `fail` for a single
-maintainer. Defensible for a dependency, harsh for a healthy small library —
-revisit when the scoring model is written.
-
 Previously:
 
 - Domain types in `src/core/types.ts`: `RepoSummary`, `LicenseInfo`,

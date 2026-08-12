@@ -46,16 +46,17 @@ export const activeContributors: Check = ({ repo, history, now }) => {
     return { id, title, weight, status: 'pass', evidence };
   }
 
-  if (authors.size === 2) {
-    return { id, title, weight, status: 'warn', evidence };
-  }
-
+  // Never worse than a warning. One maintainer is the normal, healthy shape of
+  // a small library, and calling it a failure would flag most of npm.
   return {
     id,
     title,
     weight,
-    status: 'fail',
+    status: 'warn',
     evidence,
-    fix: 'A single maintainer is a single point of failure. Check whether an organisation backs this project before depending on it.',
+    fix:
+      authors.size === 1
+        ? 'A single maintainer is a single point of failure. Check whether an organisation backs this project before depending on it.'
+        : 'Few maintainers means slow response when one of them is unavailable.',
   };
 };

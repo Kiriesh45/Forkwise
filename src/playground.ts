@@ -18,7 +18,7 @@ const client = new GitHubClient(process.env.GITHUB_TOKEN);
 try {
   const report = await analyzeRepo(client, owner, repo);
 
-  console.log(`\n${report.repo.owner}/${report.repo.name}\n`);
+  console.log(`\n${report.repo.owner}/${report.repo.name} — ${report.score ?? '—'}/100\n`);
   for (const check of report.checks) {
     console.log(`[${check.status.padEnd(7)}] ${check.title}`);
     for (const evidence of check.evidence) {
