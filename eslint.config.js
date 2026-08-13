@@ -1,5 +1,6 @@
 import js from '@eslint/js';
 import prettier from 'eslint-config-prettier';
+import reactHooks from 'eslint-plugin-react-hooks';
 import tseslint from 'typescript-eslint';
 
 export default tseslint.config(
@@ -18,6 +19,10 @@ export default tseslint.config(
       },
     },
   },
+
+  // Hook rules catch what types cannot: a stale closure in a dependency array
+  // compiles perfectly and renders the wrong data.
+  reactHooks.configs.flat['recommended-latest'],
 
   // This file is not part of the TypeScript project, so the type-aware rules
   // have nothing to work with here.

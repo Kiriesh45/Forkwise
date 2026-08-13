@@ -7,7 +7,12 @@
     // Only the scratch runner needs these. Browser entry points must not use
     // them; nothing enforces that yet beyond review.
     "types": ["node"],
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+
+    // The automatic runtime: JSX compiles to `jsx()` calls, so components do
+    // not need React in scope. Vite already builds it this way; this only
+    // teaches `tsc` the same thing.
+    "jsx": "react-jsx"
   },
 
   "include": ["src", "tests", "wxt.config.ts", ".wxt/wxt.d.ts"]

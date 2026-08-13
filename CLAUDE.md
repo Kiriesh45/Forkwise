@@ -156,7 +156,13 @@ repository the user is looking at.
   entries, serving stale results when a refresh fails.
 - `src/data/settings.ts`: optional GitHub token, verified against `/rate_limit`
   before it is stored.
-- 69 tests. The panel is deliberately plain text until stage 8.
+- React side panel: score header, checks sorted worst-first with expandable
+  evidence, and a screen for every failure mode. Presentation logic lives in
+  `sidepanel/format.ts` and is unit tested.
+- 77 tests. ESLint runs `react-hooks` rules as well as the type-aware set.
+
+Known trade-off: React costs about 195 kB of the 223 kB bundle. Aliasing
+preact/compat would remove most of it and is worth revisiting before release.
 
 Previously — stages 0 to 5, the analysis engine, all runnable in Node:
 
