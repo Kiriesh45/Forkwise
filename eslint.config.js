@@ -24,11 +24,19 @@ export default tseslint.config(
   // compiles perfectly and renders the wrong data.
   reactHooks.configs.flat['recommended-latest'],
 
-  // This file is not part of the TypeScript project, so the type-aware rules
-  // have nothing to work with here.
+  // Plain JavaScript outside the TypeScript project: the type-aware rules have
+  // nothing to work with here.
   {
-    files: ['eslint.config.js'],
+    files: ['eslint.config.js', 'scripts/**/*.mjs'],
     ...tseslint.configs.disableTypeChecked,
+    languageOptions: {
+      // Spread first: disableTypeChecked turns the type-aware parser off here,
+      // and replacing this key outright would turn it back on.
+      ...tseslint.configs.disableTypeChecked.languageOptions,
+      // Node globals, declared rather than pulled from a preset: this is the
+      // whole list these scripts use.
+      globals: { Buffer: 'readonly', console: 'readonly', URL: 'readonly' },
+    },
   },
 
   {

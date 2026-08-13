@@ -9,6 +9,7 @@
     "node": ">=20"
   },
   "scripts": {
+    "icons": "node scripts/make-icons.mjs",
     "dev": "wxt",
     "build": "wxt build",
     "postinstall": "wxt prepare",
