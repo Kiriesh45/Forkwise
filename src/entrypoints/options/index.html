@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Forkwise settings</title>
+  </head>
+  <body>
+    <main>
+      <h1>Forkwise</h1>
+
+      <h2>GitHub token (optional)</h2>
+
+      <p>
+        Without a token GitHub allows 60 API requests per hour, and one analysis costs up to five. A
+        token raises the budget to 5000 per hour.
+      </p>
+
+      <p>
+        <strong>Use a fine-grained token with no permissions selected.</strong> Forkwise only reads
+        public data; a token with no scopes is enough, and grants Forkwise no access to anything
+        private.
+      </p>
+
+      <p>
+        <strong>Extension storage is not encrypted.</strong> The token is written to your browser
+        profile on disk in plain text, where any program that can read the profile can read it. If
+        that is not acceptable, leave this empty and live with the smaller budget.
+      </p>
+
+      <p>
+        <a
+          href="https://github.com/settings/personal-access-tokens"
+          target="_blank"
+          rel="noreferrer"
+          >Create a fine-grained token on GitHub</a
+        >
+      </p>
+
+      <form id="token-form">
+        <label for="token">Token</label>
+        <input id="token" name="token" type="password" autocomplete="off" spellcheck="false" />
+        <button type="submit">Check and save</button>
+        <button type="button" id="clear">Remove</button>
+      </form>
+
+      <p id="status" role="status"></p>
+    </main>
+
+    <script type="module" src="./main.ts"></script>
+  </body>
+</html>

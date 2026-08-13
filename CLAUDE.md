@@ -146,8 +146,19 @@ analysis, telemetry. These are v0.2+ and should not be started early.
 <!-- Keep this section updated: rewrite it at the end of every stage so a fresh
      session knows exactly where the work stands. -->
 
-Stages 0 through 5 complete. The analysis engine is finished and runs in Node;
-nothing browser-specific exists yet.
+Stages 0 through 7 complete: the extension runs in Chrome and analyses the
+repository the user is looking at.
+
+- `src/entrypoints/`: background worker (all network access), content script
+  (URL only, no DOM), side panel, options page.
+- `src/data/cache/`: 24-hour cache in `chrome.storage.local`, keyed by scoring
+  version, stored under both requested and canonical names, capped at 200
+  entries, serving stale results when a refresh fails.
+- `src/data/settings.ts`: optional GitHub token, verified against `/rate_limit`
+  before it is stored.
+- 69 tests. The panel is deliberately plain text until stage 8.
+
+Previously — stages 0 to 5, the analysis engine, all runnable in Node:
 
 - Eleven checks, scoring with ceilings (`docs/scoring.md`), 50 tests, CI
   running format, lint, typecheck and tests.

@@ -126,6 +126,19 @@ export class GitHubClient {
     return { kind: 'found', text: await response.text() };
   }
 
+  /**
+   * Confirms a token works and reports the budget it unlocks. This endpoint is
+   * the one request GitHub does not charge against the budget it describes.
+   */
+  async fetchRateLimit(): Promise<RateLimitSnapshot | null> {
+    await this.send(
+      '/rate_limit',
+      'application/vnd.github+json',
+      new GitHubUnavailable('/rate_limit'),
+    );
+    return this.latestRateLimit;
+  }
+
   private async request<T>(path: string, notFound: GitHubApiError): Promise<T> {
     const response = await this.send(path, 'application/vnd.github+json', notFound);
     // Asserted, not validated. See docs/decisions/0001-no-runtime-validation.md.

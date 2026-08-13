@@ -41,6 +41,18 @@ const RESERVED = new Set([
   'watching',
 ]);
 
+/**
+ * Guards data coming back out of extension storage, which was written by
+ * whichever version of Forkwise ran last and is not covered by our types.
+ */
+export function isRepoLocation(value: unknown): value is RepoLocation {
+  if (typeof value !== 'object' || value === null) {
+    return false;
+  }
+  const candidate = value as Partial<RepoLocation>;
+  return typeof candidate.owner === 'string' && typeof candidate.repo === 'string';
+}
+
 /** Null for anything that is not a repository page. */
 export function parseRepoUrl(url: string): RepoLocation | null {
   let parsed: URL;
