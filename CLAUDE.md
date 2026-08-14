@@ -161,8 +161,17 @@ repository the user is looking at.
   `sidepanel/format.ts` and is unit tested.
 - 77 tests. ESLint runs `react-hooks` rules as well as the type-aware set.
 
-Known trade-off: React costs about 195 kB of the 223 kB bundle. Aliasing
-preact/compat would remove most of it and is worth revisiting before release.
+Stage 9 is built too: generated icons (`npm run icons`), README, SECURITY,
+CONTRIBUTING, CHANGELOG, issue and pull request templates, architecture, threat
+model, privacy policy and store listing text. Version is 0.1.0.
+
+Outstanding before the tag:
+
+- `docs/demo.gif` is referenced by the README and does not exist yet. Only the
+  author can record it.
+- `docs/decisions/0002` on choosing TypeScript 5.9 over 7 is still unwritten.
+- React costs about 195 kB of the 230 kB bundle. Aliasing preact/compat would
+  remove most of it.
 
 Previously — stages 0 to 5, the analysis engine, all runnable in Node:
 

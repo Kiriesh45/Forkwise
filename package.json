@@ -1,6 +1,6 @@
 {
   "name": "forkwise",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "private": true,
   "description": "Health and security scoring for GitHub repositories, in your browser.",
   "license": "MIT",

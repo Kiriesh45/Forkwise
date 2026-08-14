@@ -1,5 +1,9 @@
 # Roadmap to v0.1.0 (MVP)
 
+**All nine stages are built.** What remains before the tag is a demo recording
+and the store submission itself. Kept as written so the order of work, and the
+reasoning behind it, stays visible.
+
 The build order is bottom-up: data layer → analysis logic → scoring → tests →
 browser extension → UI. Every stage before stage 6 runs in plain Node and is
 verifiable from the terminal. Debugging inside a browser extension is slow, so

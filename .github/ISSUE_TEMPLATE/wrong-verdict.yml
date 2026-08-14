@@ -1,0 +1,53 @@
+name: Wrong verdict
+description: Forkwise judged a repository incorrectly
+labels: ['wrong-verdict']
+body:
+  - type: markdown
+    attributes:
+      value: |
+        The most useful report this project can receive. A tool that misjudges
+        a repository costs the user's trust in everything else it says.
+
+  - type: input
+    id: repository
+    attributes:
+      label: Repository
+      placeholder: owner/name
+    validations:
+      required: true
+
+  - type: input
+    id: check
+    attributes:
+      label: Which check
+      description: The title shown in the panel, for example "Automated tests".
+    validations:
+      required: true
+
+  - type: dropdown
+    id: direction
+    attributes:
+      label: What went wrong
+      options:
+        - It reported a problem that does not exist
+        - It missed a problem that does exist
+        - The evidence shown was wrong or misleading
+        - The status was right but the wording is confusing
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: What the truth is
+      description: How do you know? A link to the file or commit helps most.
+    validations:
+      required: true
+
+  - type: textarea
+    id: shown
+    attributes:
+      label: What the panel showed
+      description: The status and the evidence text, copied or screenshotted.
+    validations:
+      required: true

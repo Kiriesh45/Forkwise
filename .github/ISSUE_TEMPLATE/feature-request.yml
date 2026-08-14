@@ -1,0 +1,41 @@
+name: Feature request
+description: Suggest a check or a change
+labels: ['enhancement']
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Forkwise answers one question: **should I depend on this repository?**
+        Suggestions that help a repository's *maintainer* rather than its
+        *consumer* are usually out of scope — see the README.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: What decision would this help someone make
+      description: Describe the situation, not the solution.
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: What you have in mind
+    validations:
+      required: true
+
+  - type: textarea
+    id: evidence
+    attributes:
+      label: What evidence would back it up
+      description: |
+        Every finding must link to something a user can verify. If a check
+        cannot show its working, it does not belong here.
+
+  - type: textarea
+    id: cost
+    attributes:
+      label: Would it need more data
+      description: |
+        GitHub allows 60 API requests an hour and one analysis already costs up
+        to five. An extra request per analysis is a real cost.

@@ -1,0 +1,49 @@
+name: Bug report
+description: Something in the extension does not work
+labels: ['bug']
+body:
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: What you expected instead
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Open github.com/owner/name
+        2. Click the Forkwise icon
+        3. …
+    validations:
+      required: true
+
+  - type: textarea
+    id: console
+    attributes:
+      label: Console output
+      description: |
+        The extension has three consoles. The service worker one usually has
+        the answer: chrome://extensions -> Forkwise -> "service worker".
+      render: text
+
+  - type: input
+    id: version
+    attributes:
+      label: Forkwise version
+      placeholder: 0.1.0, or the commit you built from
+
+  - type: input
+    id: browser
+    attributes:
+      label: Browser and operating system
+      placeholder: Chrome 140, Windows 11
