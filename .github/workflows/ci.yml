@@ -38,3 +38,7 @@ jobs:
       - run: npm run typecheck
 
       - run: npm test
+
+      # Last, because it is the slowest, and because a broken build is useless
+      # information until the code that goes into it is known to be sound.
+      - run: npm run build

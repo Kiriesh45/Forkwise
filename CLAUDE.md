@@ -159,7 +159,9 @@ repository the user is looking at.
 - React side panel: score header, checks sorted worst-first with expandable
   evidence, and a screen for every failure mode. Presentation logic lives in
   `sidepanel/format.ts` and is unit tested.
-- 77 tests. ESLint runs `react-hooks` rules as well as the type-aware set.
+- 105 tests, including the GitHub and OSV clients through a stubbed `fetch`.
+  ESLint runs `react-hooks` rules as well as the type-aware set. CI runs
+  format, lint, typecheck, tests and the extension build.
 
 Stage 9 is built too: generated icons (`npm run icons`), README, SECURITY,
 CONTRIBUTING, CHANGELOG, issue and pull request templates, architecture, threat

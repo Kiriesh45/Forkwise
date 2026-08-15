@@ -12,3 +12,6 @@ Thumbs.db
 .wxt/
 .output/
 web-ext.config.ts
+
+# local browser profile used by `npm run dev`
+.chrome-profile/

@@ -1,5 +1,10 @@
 /**
- * Scratch runner. `npm run play -- owner/repo` — nothing here ships.
+ * Runs the whole analysis in a terminal: `npm run play -- owner/repo`.
+ *
+ * Not part of the extension bundle — it is not an entry point — but it is the
+ * fastest way to work on checks, because the engine has no browser
+ * dependencies at all. Debugging the same logic through three extension
+ * consoles costs minutes per iteration instead of seconds.
  */
 
 import { analyzeRepo } from './analysis/analyze-repo.js';

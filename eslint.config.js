@@ -4,7 +4,17 @@ import reactHooks from 'eslint-plugin-react-hooks';
 import tseslint from 'typescript-eslint';
 
 export default tseslint.config(
-  { ignores: ['node_modules/', 'dist/', '.output/', '.wxt/'] },
+  {
+    ignores: [
+      'node_modules/',
+      'dist/',
+      '.output/',
+      '.wxt/',
+      // Local and git-ignored: it holds one developer's path to their browser,
+      // so it is not part of the project TypeScript sees.
+      'web-ext.config.ts',
+    ],
+  },
 
   js.configs.recommended,
 
