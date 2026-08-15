@@ -63,8 +63,19 @@ an hourly budget of 60. Say why in the pull request.
 
 - Comments explain **why**, never what. A comment restating the line below it
   gets deleted; a comment recording a trap in GitHub's API is valuable.
-- No abstraction until there is a second implementation.
-- Names come from the domain. No `utils.ts`.
+- No JSDoc on self-evident functions. Document a module's purpose and the
+  surprising parts; leave the obvious alone.
+- No abstraction until there is a second implementation. No interface, factory
+  or wrapper added "in case we need it later".
+- No defensive `try/catch` without a named failure mode. If you cannot say what
+  throws and what the user should see, do not catch it.
+- Names come from the domain — never `data`, `result`, `handleData`. No
+  `utils.ts` or `helpers.ts`: a function with no home means the module
+  boundaries are wrong.
+- No emoji in code, comments, commit messages or documentation.
+- Real `TODO`s stay, with a name and a date. Unresolved questions are part of
+  an honest codebase.
+- The README never promises what the code does not yet do.
 - Conventional Commits: `feat:`, `fix:`, `chore:`, `docs:`, `test:`.
 
 Formatting is Prettier's job and is not worth discussing in review.

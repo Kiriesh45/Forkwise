@@ -15,3 +15,7 @@ web-ext.config.ts
 
 # local browser profile used by `npm run dev`
 .chrome-profile/
+
+# local working files, not part of the project
+LEARNING.md
+CLAUDE.md
