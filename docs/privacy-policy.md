@@ -60,4 +60,4 @@ in the date at the top of this file.
 
 ## Contact
 
-Open an issue at https://github.com/kiresh/forkwise/issues.
+Open an issue at https://github.com/Kiriesh45/Forkwise/issues.

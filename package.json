@@ -18,7 +18,8 @@
     "lint": "eslint .",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "play": "tsx --env-file-if-exists=.env src/playground.ts"
+    "play": "tsx --env-file-if-exists=.env src/playground.ts",
+    "zip": "wxt zip"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

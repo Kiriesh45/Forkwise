@@ -8,7 +8,7 @@ Forkwise is pre-1.0. Only the latest release receives fixes.
 
 Please report privately, before any public disclosure.
 
-Use GitHub's [private vulnerability reporting](https://github.com/kiresh/forkwise/security/advisories/new)
+Use GitHub's [private vulnerability reporting](https://github.com/Kiriesh45/Forkwise/security/advisories/new)
 on this repository. If that is unavailable to you, open an issue titled
 "Security contact request" containing no details, and a private channel will be
 arranged.

@@ -36,7 +36,7 @@ assuming the worst.
 Forkwise has no account, no backend and no telemetry. Requests go from your
 browser to api.github.com and api.osv.dev, and nowhere else.
 
-Open source under the MIT license: https://github.com/kiresh/forkwise
+Open source under the MIT license: https://github.com/Kiriesh45/Forkwise
 
 ## Category
 

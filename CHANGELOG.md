@@ -23,4 +23,4 @@ First working version.
 - Options page for an optional GitHub token, verified before it is stored.
 - Architecture, threat model and privacy documentation.
 
-[0.1.0]: https://github.com/kiresh/forkwise/releases/tag/v0.1.0
+[0.1.0]: https://github.com/Kiriesh45/Forkwise/releases/tag/v0.1.0

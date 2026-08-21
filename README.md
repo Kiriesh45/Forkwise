@@ -1,6 +1,6 @@
 # Forkwise
 
-[![CI](https://github.com/kiresh/forkwise/actions/workflows/ci.yml/badge.svg)](https://github.com/kiresh/forkwise/actions/workflows/ci.yml)
+[![CI](https://github.com/Kiriesh45/Forkwise/actions/workflows/ci.yml/badge.svg)](https://github.com/Kiriesh45/Forkwise/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 > Stars measure popularity, not health. Forkwise grades the repository you are
@@ -59,7 +59,7 @@ Not yet in the Chrome Web Store. To run it from source you need Node.js 20 or
 newer:
 
 ```bash
-git clone https://github.com/kiresh/forkwise.git
+git clone https://github.com/Kiriesh45/Forkwise.git
 cd forkwise
 npm ci
 npm run build
