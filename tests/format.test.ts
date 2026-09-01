@@ -2,10 +2,10 @@ import { describe, expect, it } from 'vitest';
 import type { CheckResult, CheckStatus } from '../src/core/types.js';
 import {
   describeAge,
+  describeBudget,
   describeError,
   describeFreshness,
-  scoreBand,
-  sortForDisplay,
+  groupForDisplay,
 } from '../src/entrypoints/sidepanel/format.js';
 
 const NOW = new Date('2026-08-12T12:00:00Z');
@@ -14,17 +14,19 @@ function check(id: string, status: CheckStatus): CheckResult {
   return { id, title: id, status, weight: 1, evidence: [] };
 }
 
-describe('scoreBand', () => {
-  it('bands a score rather than shading it', () => {
-    expect(scoreBand(95)).toBe('good');
-    expect(scoreBand(80)).toBe('good');
-    expect(scoreBand(79)).toBe('fair');
-    expect(scoreBand(50)).toBe('fair');
-    expect(scoreBand(49)).toBe('poor');
+describe('describeBudget', () => {
+  const resetAt = '2026-08-12T13:00:00Z';
+
+  it('says nothing while the budget is not the reader’s problem', () => {
+    expect(describeBudget({ limit: 60, remaining: 54, resetAt })).toBeNull();
   });
 
-  it('has a band for having no score at all', () => {
-    expect(scoreBand(null)).toBe('unknown');
+  it('speaks up once the panel is close to stopping', () => {
+    expect(describeBudget({ limit: 60, remaining: 4, resetAt })).toContain('4 of 60');
+  });
+
+  it('says nothing for a cached answer, which spent no budget', () => {
+    expect(describeBudget(undefined)).toBeNull();
   });
 });
 
@@ -77,9 +79,9 @@ describe('describeError', () => {
   });
 });
 
-describe('sortForDisplay', () => {
+describe('groupForDisplay', () => {
   it('puts problems first and keeps registry order within a status', () => {
-    const sorted = sortForDisplay([
+    const { findings } = groupForDisplay([
       check('a-pass', 'pass'),
       check('b-unknown', 'unknown'),
       check('c-fail', 'fail'),
@@ -87,12 +89,31 @@ describe('sortForDisplay', () => {
       check('e-fail', 'fail'),
     ]);
 
-    expect(sorted.map((result) => result.id)).toEqual([
+    expect(findings.map((result) => result.id)).toEqual([
       'c-fail',
       'e-fail',
       'd-warn',
       'b-unknown',
-      'a-pass',
     ]);
+  });
+
+  it('keeps passes out of the findings, however many there are', () => {
+    const { findings, passed } = groupForDisplay([
+      check('a-pass', 'pass'),
+      check('b-pass', 'pass'),
+      check('c-fail', 'fail'),
+    ]);
+
+    expect(findings).toHaveLength(1);
+    expect(passed.map((result) => result.id)).toEqual(['a-pass', 'b-pass']);
+  });
+
+  it('treats unknown as something to show, not something to hide', () => {
+    // An unknown is a question we could not answer, which the reader has to see
+    // to know the score was computed without it.
+    const { findings, passed } = groupForDisplay([check('a-unknown', 'unknown')]);
+
+    expect(findings.map((result) => result.id)).toEqual(['a-unknown']);
+    expect(passed).toEqual([]);
   });
 });

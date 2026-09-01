@@ -5,7 +5,7 @@ import type { CheckResult, CheckStatus, RepoAnalysis, RepoReport } from './types
  * keyed by it, so old results are discarded instead of being compared against
  * numbers that mean something different.
  */
-export const SCORING_VERSION = '1';
+export const SCORING_VERSION = '2';
 
 /**
  * The share of a check's weight each status awards.
@@ -67,4 +67,24 @@ function ceilings(checks: CheckResult[]): number[] {
     .filter((check) => check.status === 'fail')
     .map((check) => check.ceiling)
     .filter((ceiling): ceiling is number => ceiling !== undefined);
+}
+
+export type ScoreBand = 'good' | 'fair' | 'poor' | 'unknown';
+
+/**
+ * Bands, not a gradient: 71 against 73 means nothing, and shading them
+ * differently would claim a precision the model does not have.
+ *
+ * It lives beside the arithmetic rather than in the panel because it is a
+ * statement about what the number means. A second front end reading the same
+ * score has to reach the same verdict, or one of them is lying.
+ */
+export function scoreBand(score: number | null): ScoreBand {
+  if (score === null) {
+    return 'unknown';
+  }
+  if (score >= 80) {
+    return 'good';
+  }
+  return score >= 50 ? 'fair' : 'poor';
 }

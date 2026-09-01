@@ -44,7 +44,7 @@ describe('noKnownVulnerabilities', () => {
     expect(result.ceiling).toBe(50);
   });
 
-  it('does not cap the score for a moderate advisory', () => {
+  it('caps a moderate advisory at the baseline, not at the severe ceiling', () => {
     const result = noKnownVulnerabilities(
       makeInput({
         vulnerabilities: {
@@ -56,13 +56,13 @@ describe('noKnownVulnerabilities', () => {
       }),
     );
 
-    expect(result.ceiling).toBeUndefined();
+    expect(result.ceiling).toBe(70);
   });
 
-  it('does not cap the score when the severity was never looked up', () => {
+  it('does not upgrade an advisory to severe when the severity was never looked up', () => {
     // Beyond the detail-lookup budget severity is null. That is our limit, not
     // evidence of a harmless advisory — but it is not evidence of a severe one
-    // either, so it must not decide the score.
+    // either, so the finding earns the baseline ceiling and no more.
     const result = noKnownVulnerabilities(
       makeInput({
         vulnerabilities: {
@@ -74,7 +74,7 @@ describe('noKnownVulnerabilities', () => {
       }),
     );
 
-    expect(result.ceiling).toBeUndefined();
+    expect(result.ceiling).toBe(70);
   });
 
   it('passes when the database knows nothing against the packages it saw', () => {

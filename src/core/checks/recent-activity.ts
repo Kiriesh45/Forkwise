@@ -37,6 +37,9 @@ export const recentActivity: Check = ({ repo, now }) => {
     weight,
     status: 'fail',
     evidence,
+    // No ceiling, and so deliberately no `consequence` either: a finished,
+    // stable library looks exactly like an abandoned one from here, and this
+    // check is not certain enough to headline the panel over a green score.
     fix: 'Treat this as unmaintained unless the maintainers say otherwise.',
   };
 };

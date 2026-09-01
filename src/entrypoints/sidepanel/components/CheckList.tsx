@@ -1,5 +1,5 @@
 import type { CheckResult, CheckStatus, RepoAnalysis } from '../../../core/types.js';
-import { sortForDisplay } from '../format.js';
+import { groupForDisplay } from '../format.js';
 
 const STATUS_LABEL: Record<CheckStatus, string> = {
   pass: 'Pass',
@@ -9,14 +9,39 @@ const STATUS_LABEL: Record<CheckStatus, string> = {
 };
 
 export function CheckList({ analysis }: { analysis: RepoAnalysis }): React.JSX.Element {
+  const { findings, passed } = groupForDisplay(analysis.checks);
+
   return (
-    <ul className="checks">
-      {sortForDisplay(analysis.checks).map((check) => (
-        <li key={check.id}>
-          <CheckRow check={check} />
-        </li>
-      ))}
-    </ul>
+    <>
+      <ul className="checks">
+        {findings.map((check) => (
+          <li key={check.id}>
+            <CheckRow check={check} />
+          </li>
+        ))}
+      </ul>
+
+      {passed.length > 0 && (
+        // Open when nothing went wrong, because then there is nothing for it to
+        // be hiding and a panel showing one collapsed line looks like a failure
+        // to load.
+        <details className="passed" open={findings.length === 0}>
+          <summary>
+            <span className="dot" aria-hidden="true" />
+            <span className="title">Passed</span>
+            <span className="status-label">{passed.length}</span>
+          </summary>
+
+          <ul className="checks">
+            {passed.map((check) => (
+              <li key={check.id}>
+                <CheckRow check={check} />
+              </li>
+            ))}
+          </ul>
+        </details>
+      )}
+    </>
   );
 }
 

@@ -77,43 +77,98 @@ a {
 }
 
 .repo {
+  font-size: 12px;
   font-weight: 600;
   text-decoration: none;
   word-break: break-all;
 }
 
-.score {
-  margin: 4px 0 2px;
+/*
+ * The sentence takes whatever room is left and the number never gives any up:
+ * the panel can be dragged narrow, and a wrapped or shrunken 36px numeral looks
+ * broken in a way an extra line of text does not.
+ */
+.judgement {
   display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 6px;
+}
+
+/* Without this a long unbroken word refuses to wrap and pushes the score off. */
+.verdict {
+  min-width: 0;
+}
+
+.headline {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+/*
+ * Full foreground, not muted: this is the second finding, and at 13px muted it
+ * became indistinguishable from the "checked 3 h ago" line under it. Three
+ * levels, three treatments: verdict, finding, plumbing.
+ */
+.detail {
+  margin: 4px 0 0;
+  font-size: 13px;
+}
+
+.score {
+  margin: 0;
+  flex: 0 0 auto;
+  display: grid;
+  grid-template-columns: auto auto;
+  justify-content: end;
   align-items: baseline;
-  gap: 4px;
 }
 
 .score .value {
-  font-size: 40px;
+  font-size: 36px;
   font-weight: 700;
   line-height: 1;
 }
 
 .score .out-of {
   color: var(--muted);
+  font-size: 13px;
 }
 
-.band-good .value {
+/* Spans both columns so it centres under the whole score, not under "/100". */
+.score .band-label {
+  grid-column: 1 / -1;
+  margin-top: 3px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* Coloured as one unit, so the numeral and the word can never contradict. */
+.band-good {
   color: var(--good);
 }
-.band-fair .value {
+.band-fair {
   color: var(--fair);
 }
-.band-poor .value {
+.band-poor {
   color: var(--poor);
 }
-.band-unknown .value {
+.band-unknown {
   color: var(--unknown);
 }
 
+/* At the numeral's size an em dash reads as a redaction bar, not as "no data". */
+.band-unknown .value {
+  font-size: 24px;
+}
+
 .meta {
-  margin: 0;
+  margin: 10px 0 0;
   color: var(--muted);
   font-size: 12px;
 }
@@ -197,4 +252,43 @@ a {
   padding-top: 8px;
   border-top: 1px solid var(--line);
   font-size: 13px;
+}
+
+/*
+ * Everything that is fine, folded into one line. A green row the reader has to
+ * scroll past to reach a finding costs them something and tells them nothing;
+ * the count is enough to show the question was asked.
+ */
+.passed {
+  margin-top: 6px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 8px 10px;
+}
+
+.passed > summary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  color: var(--muted);
+  /* Same reason as the rows above: the triangle duplicates the dot. */
+  list-style: none;
+}
+
+.passed > summary::-webkit-details-marker {
+  display: none;
+}
+
+.passed > summary .dot {
+  background: var(--good);
+}
+
+.passed > summary .title {
+  flex: 1;
+  font-weight: 500;
+}
+
+.passed .checks {
+  margin-top: 8px;
 }

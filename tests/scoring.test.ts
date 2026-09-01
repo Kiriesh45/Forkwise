@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { scoreReport } from '../src/core/scoring.js';
+import { scoreBand, scoreReport } from '../src/core/scoring.js';
 import type { CheckResult, CheckStatus, RepoReport } from '../src/core/types.js';
 
 function check(id: string, status: CheckStatus, weight: number, ceiling?: number): CheckResult {
@@ -94,6 +94,20 @@ describe('scoreReport', () => {
   });
 
   it('stamps the scoring version so stale cache entries can be spotted', () => {
-    expect(scoreReport(report([check('a', 'pass', 1)])).scoringVersion).toBe('1');
+    expect(scoreReport(report([check('a', 'pass', 1)])).scoringVersion).toBe('2');
+  });
+});
+
+describe('scoreBand', () => {
+  it('bands a score rather than shading it', () => {
+    expect(scoreBand(95)).toBe('good');
+    expect(scoreBand(80)).toBe('good');
+    expect(scoreBand(79)).toBe('fair');
+    expect(scoreBand(50)).toBe('fair');
+    expect(scoreBand(49)).toBe('poor');
+  });
+
+  it('has a band for having no score at all', () => {
+    expect(scoreBand(null)).toBe('unknown');
   });
 });

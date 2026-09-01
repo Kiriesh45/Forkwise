@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it } from 'vitest';
+import { SCORING_VERSION } from '../../src/core/scoring.js';
 import { AnalysisCache, MAX_AGE_MS } from '../../src/data/cache/analysis-cache.js';
 import type { KeyValueStore } from '../../src/data/cache/key-value-store.js';
 import type { RepoAnalysis } from '../../src/core/types.js';
@@ -106,12 +107,16 @@ describe('AnalysisCache', () => {
   it('discards entries written under a different scoring model', async () => {
     await cache.write({ owner: 'acme', repo: 'widget' }, analysisOf('acme', 'widget'), NOW);
 
+    // Built from the constant rather than spelled out: the claim is that the
+    // key carries the model version, not that the version is any one number.
+    // Written out, this assertion broke on the bump to 2 and, worse, quietly
+    // stopped the junk test below from reaching anything.
     const [key] = [...store.items.keys()];
-    expect(key).toContain('analysis:1:1:acme/widget');
+    expect(key).toContain(`analysis:1:${SCORING_VERSION}:acme/widget`);
   });
 
   it('ignores stored junk instead of trusting it', async () => {
-    await store.set({ 'analysis:1:1:acme/widget': { storedAt: 'yesterday' } });
+    await store.set({ [`analysis:1:${SCORING_VERSION}:acme/widget`]: { storedAt: 'yesterday' } });
 
     expect(await cache.read({ owner: 'acme', repo: 'widget' }, NOW)).toBeNull();
   });

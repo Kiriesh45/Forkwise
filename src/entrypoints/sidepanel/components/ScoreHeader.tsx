@@ -1,6 +1,8 @@
+import { scoreBand } from '../../../core/scoring.js';
 import type { RepoAnalysis } from '../../../core/types.js';
+import { verdictFor } from '../../../core/verdict.js';
 import type { Freshness, RateLimitStatus } from '../../../messaging.js';
-import { describeFreshness, scoreBand } from '../format.js';
+import { BAND_LABEL, describeBudget, describeFreshness } from '../format.js';
 
 interface ScoreHeaderProps {
   analysis: RepoAnalysis;
@@ -14,6 +16,9 @@ export function ScoreHeader({
   rateLimit,
 }: ScoreHeaderProps): React.JSX.Element {
   const { owner, name } = analysis.repo;
+  const verdict = verdictFor(analysis);
+  const band = scoreBand(analysis.score);
+  const budget = describeBudget(rateLimit);
 
   return (
     <header className="score-header">
@@ -26,16 +31,27 @@ export function ScoreHeader({
         {owner}/{name}
       </a>
 
-      <p className={`score band-${scoreBand(analysis.score)}`}>
-        {/* A dash, not a zero: we could not measure it, which is not the same
-            as measuring badly. */}
-        <span className="value">{analysis.score ?? '—'}</span>
-        <span className="out-of">/100</span>
-      </p>
+      {/* The verdict is the heading, not the number: the reader asked whether
+          they can depend on this, and 30/100 only answers that once you have
+          read docs/scoring.md. The score sits alongside as corroboration. */}
+      <div className="judgement">
+        <div className="verdict">
+          <h1 className="headline">{verdict.headline}</h1>
+          {verdict.detail !== null && <p className="detail">{verdict.detail}</p>}
+        </div>
+
+        <p className={`score band-${band}`}>
+          {/* A dash, not a zero: we could not measure it, which is not the same
+              as measuring badly. */}
+          <span className="value">{analysis.score ?? '—'}</span>
+          {analysis.score !== null && <span className="out-of">/100</span>}
+          <span className="band-label">{BAND_LABEL[band]}</span>
+        </p>
+      </div>
 
       <p className="meta">
         {describeFreshness(freshness)}
-        {rateLimit !== undefined && ` · ${rateLimit.remaining}/${rateLimit.limit} requests left`}
+        {budget !== null && ` · ${budget}`}
       </p>
     </header>
   );

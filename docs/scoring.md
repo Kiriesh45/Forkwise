@@ -1,6 +1,6 @@
 # How the score is calculated
 
-Scoring model version: **1** (`SCORING_VERSION` in `src/core/scoring.ts`).
+Scoring model version: **2** (`SCORING_VERSION` in `src/core/scoring.ts`).
 
 The number is a summary of the checks, never a replacement for them. Anything
 the score says must be traceable to a check result and its evidence.
@@ -34,14 +34,21 @@ Then the score is capped by any fatal failure. Ceilings are declared by the
 check that found the problem, not by a table here, because some of them depend
 on the finding itself:
 
-| Failing check                                         | Ceiling | Why                                                                                                                                                                                    |
-| ----------------------------------------------------- | ------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `not-archived`                                        | 30      | The owner has stated the project is read-only. Documentation quality cannot change that.                                                                                               |
-| `has-license`                                         | 45      | Without a license the default is "all rights reserved". However good the code is, you may not legally use it.                                                                          |
-| `no-known-vulnerabilities`, critical or high severity | 50      | Applied only when the severity is known. Moderate, low and unknown severities subtract weight without a ceiling — a limit imposed by our own lookup budget must not read as a verdict. |
+| Failing check                                         | Ceiling | Why                                                                                                                                                                                                      |
+| ----------------------------------------------------- | ------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `not-archived`                                        | 30      | The owner has stated the project is read-only. Documentation quality cannot change that.                                                                                                                 |
+| `has-license`                                         | 45      | Without a license the default is "all rights reserved". However good the code is, you may not legally use it.                                                                                            |
+| `no-known-vulnerabilities`, critical or high severity | 50      | Applied only when the severity was actually looked up. Treating an advisory we ran out of budget to inspect as severe would punish the repository for our request limit.                                 |
+| `no-known-vulnerabilities`, any other severity        | 70      | The model refuses to call a repository good while it knows one of its dependencies has a published advisory. Not a claim of severity: at 70 the panel says "usable, with gaps", not "safe to depend on". |
 
 `facebookarchive/draft-js` is the case that forced this: nine healthy signals
 averaged out to 64 for a repository abandoned three years earlier.
+
+Version 2 added the second vulnerability ceiling. Under version 1 a single
+moderate advisory left the score at 86, and the panel opened with "Looks safe
+to depend on" immediately above its own red row naming that advisory. The
+headline is derived from the model, so the only honest place to fix that was
+the model.
 
 ## Weights
 
@@ -74,7 +81,8 @@ thing.
 ## Known limitations
 
 - Weights are documented here but declared in the check files, so the two can
-  drift. A test should assert they match.
+  drift. `tests/documented-weights.test.ts` reads this table and fails when
+  they do. Ceilings have no such guard.
 - Every threshold (90 days, three contributors, the ceilings) is a judgement
   call, not a measurement.
 - The model treats all repositories alike. A stable, finished library is

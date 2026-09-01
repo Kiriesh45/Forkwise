@@ -76,6 +76,18 @@ export interface CheckResult {
   /** Actionable advice. Only meaningful for 'warn' and 'fail'. */
   fix?: string;
   /**
+   * What this finding means for someone deciding whether to depend on the
+   * repository, phrased as a headline rather than as a fact: "Archived by its
+   * owner, it will not be fixed" rather than "the archived flag is set".
+   *
+   * Read only by the opening verdict, and only off a failing check that also
+   * declares a `ceiling` — stating a consequence without capping the score
+   * would let an alarming headline sit above a comfortable number. Optional
+   * because most findings have no business leading a verdict: a missing
+   * CONTRIBUTING.md earns a row in the list and nothing more.
+   */
+  consequence?: string;
+  /**
    * A score this finding refuses to let the repository exceed, however well it
    * does elsewhere. Set only for findings where no amount of polish changes
    * the answer.

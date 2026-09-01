@@ -1,25 +1,40 @@
+import type { ScoreBand } from '../../core/scoring.js';
 import type { CheckResult, CheckStatus } from '../../core/types.js';
-import type { AnalysisError, Freshness } from '../../messaging.js';
+import type { AnalysisError, Freshness, RateLimitStatus } from '../../messaging.js';
 
 /**
  * Presentation logic, kept out of the components so it can be tested without
  * rendering anything.
+ *
+ * What a score *means* is not presentation and lives in `core/scoring.ts`; this
+ * module only deals with wording the panel alone cares about.
  */
-
-export type ScoreBand = 'good' | 'fair' | 'poor' | 'unknown';
 
 /**
- * Bands, not a gradient: a score of 71 versus 73 means nothing, and colouring
- * them differently would imply a precision the model does not have.
+ * Spells out what the colour of the score is already saying. Colour alone fails
+ * for a red-green colourblind reader, in a greyscale screenshot, and in the
+ * compressed thumbnails a store listing is judged by.
  */
-export function scoreBand(score: number | null): ScoreBand {
-  if (score === null) {
-    return 'unknown';
+export const BAND_LABEL: Record<ScoreBand, string> = {
+  good: 'Good',
+  fair: 'Fair',
+  poor: 'Poor',
+  unknown: 'Unrated',
+};
+
+/** Below this the budget stops being trivia and becomes the next thing to break. */
+const LOW_BUDGET = 10;
+
+/**
+ * Null while there is plenty left, because a permanent "54/60 requests left" is
+ * a statistic about our own plumbing printed where the answer should be. It
+ * earns its place only once it explains why the panel is about to stop working.
+ */
+export function describeBudget(rateLimit: RateLimitStatus | undefined): string | null {
+  if (rateLimit === undefined || rateLimit.remaining > LOW_BUDGET) {
+    return null;
   }
-  if (score >= 80) {
-    return 'good';
-  }
-  return score >= 50 ? 'fair' : 'poor';
+  return `${rateLimit.remaining} of ${rateLimit.limit} GitHub requests left`;
 }
 
 export function describeAge(ageMs: number): string {
@@ -98,6 +113,23 @@ const DISPLAY_ORDER: Record<CheckStatus, number> = { fail: 0, warn: 1, unknown: 
  * The registry is ordered by how much each check matters. A reader scanning a
  * panel wants the problems first, so status wins and importance breaks ties.
  */
-export function sortForDisplay(checks: CheckResult[]): CheckResult[] {
+function sortForDisplay(checks: CheckResult[]): CheckResult[] {
   return [...checks].sort((a, b) => DISPLAY_ORDER[a.status] - DISPLAY_ORDER[b.status]);
+}
+
+/**
+ * Two lists rather than one, because the panel gives them different weight: a
+ * pass is only there to say the question was asked and answered, and eight of
+ * them stacked between the reader and a finding are eight rows of noise.
+ */
+export function groupForDisplay(checks: CheckResult[]): {
+  findings: CheckResult[];
+  passed: CheckResult[];
+} {
+  const sorted = sortForDisplay(checks);
+
+  return {
+    findings: sorted.filter((check) => check.status !== 'pass'),
+    passed: sorted.filter((check) => check.status === 'pass'),
+  };
 }

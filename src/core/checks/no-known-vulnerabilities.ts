@@ -7,8 +7,19 @@ const weight = 5;
 /** Beyond this the panel becomes a wall of text; the count carries the rest. */
 const MAX_LISTED = 5;
 
-/** Applied only when an advisory is known to be critical or high severity. */
+/** Applied when an advisory is known to be critical or high severity. */
 const SEVERE_CEILING = 50;
+
+/**
+ * Applied to any confirmed advisory, whatever its severity.
+ *
+ * Without it a single moderate advisory left the score at 86, and the panel
+ * opened with "Looks safe to depend on" directly above its own red row naming
+ * the advisory. This is not a claim that the finding is severe — it is the
+ * model refusing to call a repository good while it knows something is wrong
+ * with its dependencies.
+ */
+const VULNERABLE_CEILING = 70;
 
 /**
  * The only check backed by an external security database rather than by
@@ -51,14 +62,31 @@ export const noKnownVulnerabilities: Check = ({ vulnerabilities }) => {
       { text: coverage },
     ],
     fix: 'Update the affected packages, or check whether a patched release exists.',
-    ...(hasSevereFinding(vulnerabilities.vulnerabilities) ? { ceiling: SEVERE_CEILING } : {}),
+    consequence: describeExposure(vulnerabilities.vulnerabilities),
+    ceiling: hasSevereFinding(vulnerabilities.vulnerabilities)
+      ? SEVERE_CEILING
+      : VULNERABLE_CEILING,
   };
 };
 
 /**
- * Only findings we are sure about earn a ceiling. Severity is missing for
- * advisories beyond the detail-lookup budget, and treating "unknown severity"
- * as severe would punish repositories for our own request limit.
+ * Severity is named only when it was actually looked up. Advisories past the
+ * detail budget arrive with a null severity, and calling those severe would be
+ * inventing the worst case to make a better headline.
+ */
+function describeExposure(vulnerabilities: Vulnerability[]): string {
+  const count =
+    vulnerabilities.length === 1
+      ? '1 dependency with a known vulnerability'
+      : `${vulnerabilities.length} dependencies with known vulnerabilities`;
+
+  return hasSevereFinding(vulnerabilities) ? `${count}, at least one severe` : count;
+}
+
+/**
+ * Only findings we are sure about earn the harsher ceiling. Severity is missing
+ * for advisories beyond the detail-lookup budget, and treating "unknown
+ * severity" as severe would punish repositories for our own request limit.
  */
 function hasSevereFinding(vulnerabilities: Vulnerability[]): boolean {
   return vulnerabilities.some(
