@@ -113,8 +113,9 @@ Manifest V3 forbids loading remote code, so a compromised CDN cannot inject
 anything after installation.
 
 **Residual risk.** Build-time dependencies are numerous, as they always are.
-GitHub Actions are pinned by major tag rather than by commit SHA, which is a
-known weakening; see the comment in `.github/workflows/ci.yml`.
+GitHub Actions are pinned by commit SHA, so moving a tag no longer changes what
+runs, but the npm dependency tree is still trusted wholesale at install time.
+Dependabot raises pull requests for both; nothing reviews them but the author.
 
 ### A wrong verdict
 

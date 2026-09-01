@@ -1,0 +1,22 @@
+# Updates arrive as pull requests, which run the same CI as everything else.
+# Nothing here merges on its own: an automated bump to a dependency that ships
+# inside the extension is a supply-chain event, and it gets read by a person.
+version: 2
+
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    # One pull request per group, not per package. A wall of separate bumps is
+    # a wall nobody reads, which defeats the point of being told at all.
+    groups:
+      dev-dependencies:
+        dependency-type: development
+
+  # Actions are pinned by commit SHA, which no human is going to update by
+  # hand. Dependabot rewrites the SHA and the version comment together.
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly

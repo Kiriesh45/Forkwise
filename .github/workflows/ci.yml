@@ -18,11 +18,12 @@ jobs:
   verify:
     runs-on: ubuntu-latest
     steps:
-      # Pinned by major tag. Pinning to a commit SHA would be stricter against
-      # a compromised action, at the cost of manual updates.
-      - uses: actions/checkout@v4
+      # Pinned by commit SHA, not by tag: a tag can be moved to point at new
+      # code, so `@v4` trusts whoever can push tags to that repository. The
+      # trailing comment is what Dependabot reads to know which version this is.
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: 22
           cache: npm
