@@ -10,5 +10,6 @@ export const hasSecurityPolicy = fileCheck({
   // It signals maturity, not danger.
   missingStatus: 'warn',
   missingText: 'No SECURITY.md, so there is no stated way to report a vulnerability privately',
-  fix: 'Add a SECURITY.md with a contact address and an expected response time.',
+  advice:
+    'There is no private channel for reporting a flaw you find, so expect to disclose it in a public issue.',
 });

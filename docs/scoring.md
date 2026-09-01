@@ -1,6 +1,6 @@
 # How the score is calculated
 
-Scoring model version: **2** (`SCORING_VERSION` in `src/core/scoring.ts`).
+Scoring model version: **3** (`SCORING_VERSION` in `src/core/scoring.ts`).
 
 The number is a summary of the checks, never a replacement for them. Anything
 the score says must be traceable to a check result and its evidence.
@@ -38,7 +38,7 @@ on the finding itself:
 | ----------------------------------------------------- | ------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `not-archived`                                        | 30      | The owner has stated the project is read-only. Documentation quality cannot change that.                                                                                                                 |
 | `has-license`                                         | 45      | Without a license the default is "all rights reserved". However good the code is, you may not legally use it.                                                                                            |
-| `no-known-vulnerabilities`, critical or high severity | 50      | Applied only when the severity was actually looked up. Treating an advisory we ran out of budget to inspect as severe would punish the repository for our request limit.                                 |
+| `no-known-vulnerabilities`, critical or high severity | 45      | Applied only when the severity was actually looked up. Treating an advisory we ran out of budget to inspect as severe would punish the repository for our request limit.                                 |
 | `no-known-vulnerabilities`, any other severity        | 70      | The model refuses to call a repository good while it knows one of its dependencies has a published advisory. Not a claim of severity: at 70 the panel says "usable, with gaps", not "safe to depend on". |
 
 `facebookarchive/draft-js` is the case that forced this: nine healthy signals
@@ -49,6 +49,15 @@ moderate advisory left the score at 86, and the panel opened with "Looks safe
 to depend on" immediately above its own red row naming that advisory. The
 headline is derived from the model, so the only honest place to fix that was
 the model.
+
+Version 3 lowered the severe ceiling from 50 to 45. A ceiling of exactly 50
+landed on the boundary `scoreBand` uses for "fair", so the worst security
+finding available was painted amber. A ceiling should sit inside a band, not
+on its edge.
+
+Two findings can now declare the same ceiling. The verdict breaks that tie by
+weight and then by registry order, which is ordered by how much each check
+matters — so the outcome is deliberate rather than incidental.
 
 ## Weights
 

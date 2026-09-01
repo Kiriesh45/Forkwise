@@ -54,9 +54,9 @@ export const activeContributors: Check = ({ repo, history, now }) => {
     weight,
     status: 'warn',
     evidence,
-    fix:
+    advice:
       authors.size === 1
         ? 'A single maintainer is a single point of failure. Check whether an organisation backs this project before depending on it.'
-        : 'Few maintainers means slow response when one of them is unavailable.',
+        : 'Expect slow responses whenever one of the few maintainers is unavailable.',
   };
 };

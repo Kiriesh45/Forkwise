@@ -22,7 +22,7 @@ export const notArchived: Check = ({ repo }) => {
     evidence: [
       { text: 'The owner archived this repository: it is read-only and will not be fixed' },
     ],
-    fix: 'Look for a maintained fork before depending on this.',
+    advice: 'Look for a maintained fork before depending on this.',
     consequence: 'Archived by its owner, and will not be fixed',
     // No documentation, test suite or release cadence changes what the owner
     // has already announced.

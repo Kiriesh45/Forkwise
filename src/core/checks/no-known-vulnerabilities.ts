@@ -7,8 +7,15 @@ const weight = 5;
 /** Beyond this the panel becomes a wall of text; the count carries the rest. */
 const MAX_LISTED = 5;
 
-/** Applied when an advisory is known to be critical or high severity. */
-const SEVERE_CEILING = 50;
+/**
+ * Applied when an advisory is known to be critical or high severity.
+ *
+ * 45 rather than 50 because `scoreBand` calls 50 "fair": at the old value the
+ * worst security finding this tool can make was painted amber and labelled
+ * FAIR. It matches the missing-license ceiling deliberately — an exploitable
+ * dependency disqualifies a repository no less than an unusable license does.
+ */
+const SEVERE_CEILING = 45;
 
 /**
  * Applied to any confirmed advisory, whatever its severity.
@@ -61,7 +68,8 @@ export const noKnownVulnerabilities: Check = ({ vulnerabilities }) => {
       ...vulnerabilities.vulnerabilities.slice(0, MAX_LISTED).map(describe),
       { text: coverage },
     ],
-    fix: 'Update the affected packages, or check whether a patched release exists.',
+    advice:
+      'Depending on this means inheriting these. Check whether a newer release has updated them.',
     consequence: describeExposure(vulnerabilities.vulnerabilities),
     ceiling: hasSevereFinding(vulnerabilities.vulnerabilities)
       ? SEVERE_CEILING

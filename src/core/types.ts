@@ -73,8 +73,19 @@ export interface CheckResult {
   weight: number;
   /** Always present — may be empty. See the note below on why. */
   evidence: Evidence[];
-  /** Actionable advice. Only meaningful for 'warn' and 'fail'. */
-  fix?: string;
+  /**
+   * What the reader should do about this finding, written for someone deciding
+   * whether to depend on the repository — never for the person who maintains
+   * it.
+   *
+   * Named `advice` rather than `fix` because the old name kept dragging the
+   * text towards the wrong audience: "Add a LICENSE file" is useless to a
+   * reader who cannot commit to the repository they are reading about.
+   *
+   * Absent when there is nothing honest to say. A missing CONTRIBUTING.md is
+   * worth reporting and gives a consumer nothing to act on.
+   */
+  advice?: string;
   /**
    * What this finding means for someone deciding whether to depend on the
    * repository, phrased as a headline rather than as a fact: "Archived by its

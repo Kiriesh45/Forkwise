@@ -27,7 +27,7 @@ export const recentActivity: Check = ({ repo, now }) => {
       weight,
       status: 'warn',
       evidence,
-      fix: 'Check whether the maintainers are still responding to issues.',
+      advice: 'Check whether the maintainers are still responding to issues.',
     };
   }
 
@@ -40,6 +40,6 @@ export const recentActivity: Check = ({ repo, now }) => {
     // No ceiling, and so deliberately no `consequence` either: a finished,
     // stable library looks exactly like an abandoned one from here, and this
     // check is not certain enough to headline the panel over a green score.
-    fix: 'Treat this as unmaintained unless the maintainers say otherwise.',
+    advice: 'Treat this as unmaintained unless the maintainers say otherwise.',
   };
 };

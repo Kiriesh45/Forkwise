@@ -20,7 +20,8 @@ export const hasDescription: Check = ({ repo }) => {
     title,
     weight,
     status: 'warn',
+    // No advice, for the same reason as the contribution guide: there is
+    // nothing here for a reader to do.
     evidence: [{ text: 'The repository has no description' }],
-    fix: 'Add a one-line description so people can tell what this is without opening it.',
   };
 };

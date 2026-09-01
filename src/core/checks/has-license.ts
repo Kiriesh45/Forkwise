@@ -31,7 +31,8 @@ export const hasLicense: Check = ({ repo }) => {
         weight,
         status: 'warn',
         evidence: [{ text: 'A license file exists, but GitHub could not identify it' }],
-        fix: 'Use the unmodified text of a standard license so tools can recognise it.',
+        advice:
+          'Read the license file yourself before depending on this. No tool could tell you what it permits.',
       };
 
     case 'none':
@@ -41,7 +42,8 @@ export const hasLicense: Check = ({ repo }) => {
         weight,
         status: 'fail',
         evidence: [{ text: 'No license — the code is "all rights reserved" by default' }],
-        fix: 'Add a LICENSE file. Without one, nobody may legally reuse this code.',
+        advice:
+          'You have no right to use, copy or redistribute this. Ask the owner for a license first.',
         consequence: 'No license, so you have no legal right to use it',
         // However good the code is, you may not legally use it.
         ceiling: 45,

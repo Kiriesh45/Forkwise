@@ -71,7 +71,7 @@ function CheckRow({ check }: { check: CheckResult }): React.JSX.Element {
         ))}
       </ul>
 
-      {check.fix !== undefined && <p className="fix">{check.fix}</p>}
+      {check.advice !== undefined && <p className="advice">{check.advice}</p>}
     </details>
   );
 }

@@ -41,7 +41,7 @@ describe('noKnownVulnerabilities', () => {
       }),
     );
 
-    expect(result.ceiling).toBe(50);
+    expect(result.ceiling).toBe(45);
   });
 
   it('caps a moderate advisory at the baseline, not at the severe ceiling', () => {

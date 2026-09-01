@@ -10,7 +10,8 @@ export interface FileCheckSpec {
   /** What absence means here. A missing license is not a missing changelog. */
   missingStatus: Extract<CheckStatus, 'warn' | 'fail'>;
   missingText: string;
-  fix: string;
+  /** Absent when the finding gives a consumer nothing to act on. */
+  advice?: string;
 }
 
 /**
@@ -53,7 +54,7 @@ export function fileCheck(spec: FileCheckSpec): Check {
       weight,
       status: spec.missingStatus,
       evidence: [{ text: spec.missingText }],
-      fix: spec.fix,
+      ...(spec.advice === undefined ? {} : { advice: spec.advice }),
     };
   };
 }

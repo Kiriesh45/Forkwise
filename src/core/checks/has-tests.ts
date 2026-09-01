@@ -95,6 +95,7 @@ export const hasTests: Check = ({ repo, files }) => {
     weight,
     status: 'warn',
     evidence: [{ text: 'No files matching common test naming conventions' }],
-    fix: 'Add automated tests. Without them, nothing stops a release from breaking dependents.',
+    advice:
+      'Pin an exact version and test upgrades yourself: nothing here catches a release that breaks you.',
   };
 };

@@ -94,7 +94,7 @@ describe('scoreReport', () => {
   });
 
   it('stamps the scoring version so stale cache entries can be spotted', () => {
-    expect(scoreReport(report([check('a', 'pass', 1)])).scoringVersion).toBe('2');
+    expect(scoreReport(report([check('a', 'pass', 1)])).scoringVersion).toBe('3');
   });
 });
 

@@ -55,6 +55,7 @@ export const hasCi: Check = ({ repo, files }) => {
     weight,
     status: 'warn',
     evidence: [{ text: 'No CI configuration found' }],
-    fix: 'Run tests and linting automatically on every pull request.',
+    advice:
+      'Any tests here run only when someone remembers to, so check a release yourself before upgrading to it.',
   };
 };

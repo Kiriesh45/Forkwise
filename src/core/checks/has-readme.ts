@@ -8,5 +8,5 @@ export const hasReadme = fileCheck({
   candidates: ['README.md', 'README', 'README.rst', 'README.txt', 'docs/README.md'],
   missingStatus: 'fail',
   missingText: 'No README found',
-  fix: 'Add a README that says what the project does, who it is for, and how to install it.',
+  advice: 'Expect to read the source to learn what this does and how to call it.',
 });

@@ -5,7 +5,7 @@ import type { CheckResult, CheckStatus, RepoAnalysis, RepoReport } from './types
  * keyed by it, so old results are discarded instead of being compared against
  * numbers that mean something different.
  */
-export const SCORING_VERSION = '2';
+export const SCORING_VERSION = '3';
 
 /**
  * The share of a check's weight each status awards.
