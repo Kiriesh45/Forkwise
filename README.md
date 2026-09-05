@@ -9,7 +9,13 @@
 A Chrome extension (Manifest V3). It opens a side panel beside github.com and
 answers the question stars cannot: **should I depend on this?**
 
-![The Forkwise panel on a repository with a vulnerable dependency](docs/img/fair.png)
+<p align="center">
+  <img
+    src="docs/img/fair.png"
+    alt="The Forkwise panel on a repository with a vulnerable dependency"
+    width="420"
+  />
+</p>
 
 ## What it says
 
@@ -29,9 +35,14 @@ check, worst first, each carrying evidence you can click and verify.
 <details>
 <summary>Two more panels: an archived repository, and a healthy one</summary>
 
-![An archived repository with no license, scoring 30](docs/img/poor.png)
-
-![A healthy repository, scoring 100](docs/img/good.png)
+<p align="center">
+  <img
+    src="docs/img/poor.png"
+    alt="An archived repository with no license, scoring 30"
+    width="360"
+  />
+  <img src="docs/img/good.png" alt="A healthy repository, scoring 100" width="360" />
+</p>
 
 </details>
 
