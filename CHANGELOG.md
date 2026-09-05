@@ -9,8 +9,12 @@ First working version.
 
 ### Added
 
-- Side panel that grades the GitHub repository currently open, with a score
-  from 0 to 100 and evidence for every finding.
+- Side panel that opens with a one-sentence verdict on the repository
+  currently open, built from the findings that decided it, with a 0 to 100
+  score beside it as corroboration.
+- Findings first: checks that passed collapse into a single line, and the
+  advice under each finding is written for someone deciding whether to depend
+  on the repository rather than for the person maintaining it.
 - Eleven checks: archived status, license, known vulnerabilities in
   dependencies, recent activity, active contributors, tests, CI, README,
   security policy, contribution guide and description.
