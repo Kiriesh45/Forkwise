@@ -15,5 +15,5 @@
     "jsx": "react-jsx"
   },
 
-  "include": ["src", "tests", "wxt.config.ts", ".wxt/wxt.d.ts"]
+  "include": ["src", "tests", "scripts", "wxt.config.ts", ".wxt/wxt.d.ts"]
 }

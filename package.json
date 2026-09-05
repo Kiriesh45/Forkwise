@@ -19,6 +19,7 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "play": "tsx --env-file-if-exists=.env src/playground.ts",
+    "preview": "tsx scripts/preview.ts",
     "zip": "wxt zip"
   },
   "devDependencies": {
