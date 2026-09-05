@@ -47,7 +47,7 @@ explaining it, rather than being inlined and forgotten.
 
 Descriptions, file paths and advisory summaries are rendered in the panel.
 
-**Mitigation.** React escapes text by default and the code never uses
+**Mitigation.** Preact escapes text by default and the code never uses
 `dangerouslySetInnerHTML`. Evidence links are rendered as `href` on `<a>`
 elements; a `javascript:` URL in that position does not execute in an
 extension page under the default Manifest V3 content security policy.
@@ -107,8 +107,10 @@ data.
 
 The extension ships whatever its dependencies contain.
 
-**Mitigations.** Runtime dependencies are React and React DOM, and nothing
-else. `npm ci` in CI installs exactly what `package-lock.json` records.
+**Mitigations.** Preact is the only runtime dependency. The source is written
+against the React API and Preact is substituted at build time, so what ships is
+one library rather than two. `npm ci` in CI installs exactly what
+`package-lock.json` records.
 Manifest V3 forbids loading remote code, so a compromised CDN cannot inject
 anything after installation.
 

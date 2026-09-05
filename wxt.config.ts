@@ -4,6 +4,24 @@ export default defineConfig({
   srcDir: 'src',
   modules: ['@wxt-dev/module-react'],
 
+  /*
+   * React is swapped for Preact at build time. The panel is four components,
+   * two `useState` calls and no React feature beyond hooks, and React was
+   * 196 kB of a 233 kB extension for that.
+   *
+   * Aliased rather than rewritten: the source keeps importing "react", the
+   * types keep coming from @types/react, and scripts/preview.ts keeps
+   * rendering with React itself. Only the shipped bundle changes.
+   */
+  vite: () => ({
+    resolve: {
+      alias: {
+        react: 'preact/compat',
+        'react-dom': 'preact/compat',
+      },
+    },
+  }),
+
   manifest: {
     name: 'Forkwise',
     description: 'Health and security scoring for GitHub repositories, in your browser.',

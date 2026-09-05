@@ -54,7 +54,7 @@ and every check would otherwise have to remember that.
 
 ```
 content script  ──message──►  background worker  ──storage──►  side panel
-(least trusted)               (all network access)             (React UI)
+(least trusted)               (all network access)             (Preact UI)
 ```
 
 - **Content script** runs inside github.com, alongside scripts we do not
