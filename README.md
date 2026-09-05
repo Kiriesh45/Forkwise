@@ -9,6 +9,8 @@
 A Chrome extension (Manifest V3). It opens a side panel beside github.com and
 answers the question stars cannot: **should I depend on this?**
 
+![The Forkwise panel on a repository with a vulnerable dependency](docs/img/fair.png)
+
 ## What it says
 
 The panel opens with a verdict, not with a number:
@@ -23,6 +25,15 @@ The sentence is built from the findings that actually decided the outcome. The
 score sits beside it as corroboration, because a number on its own only means
 something to someone who has read the model behind it. Underneath is every
 check, worst first, each carrying evidence you can click and verify.
+
+<details>
+<summary>Two more panels: an archived repository, and a healthy one</summary>
+
+![An archived repository with no license, scoring 30](docs/img/poor.png)
+
+![A healthy repository, scoring 100](docs/img/good.png)
+
+</details>
 
 ## The problem
 

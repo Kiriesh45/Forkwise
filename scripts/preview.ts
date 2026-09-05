@@ -73,6 +73,13 @@ const abandoned = makeInput({
   repo: { isArchived: true, license: { kind: 'none' }, pushedAt: daysAgo(1723) },
   files: ['README.md', 'src/index.js', 'test/index.test.js', '.github/workflows/ci.yml'],
   commits: [{ author: 'ana', committedAt: daysAgo(1723) }],
+  // Spelled out rather than left to the helper's default, which reads "not
+  // exercised by this test" — true in a test, nonsense in a screenshot. This
+  // is the wording analyze-repo.ts produces for a repository with no manifest.
+  vulnerabilities: {
+    kind: 'not-checked',
+    reason: 'No package.json, so there is nothing to look up',
+  },
 });
 
 const vulnerable = makeInput({
