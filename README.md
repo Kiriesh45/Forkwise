@@ -110,8 +110,17 @@ wrong and what was done about it: [docs/threat-model.md](docs/threat-model.md).
 
 ## Install
 
-Not yet in any extension store. To run it from source you need Node.js 20 or
-newer:
+Not yet in any extension store.
+
+Download the latest zip from
+[Releases](https://github.com/Kiriesh45/Forkwise/releases) and unzip it. Then
+open `chrome://extensions`, turn on **Developer mode**, choose **Load
+unpacked**, and select the unzipped folder. Chrome cannot load the zip itself.
+
+<details>
+<summary>Or build it from source</summary>
+
+Node.js 20 or newer:
 
 ```bash
 git clone https://github.com/Kiriesh45/Forkwise.git
@@ -120,8 +129,9 @@ npm ci
 npm run build
 ```
 
-Then open `chrome://extensions`, turn on **Developer mode**, choose **Load
-unpacked**, and select `.output/chrome-mv3`.
+Load `.output/chrome-mv3` the same way.
+
+</details>
 
 Open any repository on github.com and click the Forkwise icon.
 
