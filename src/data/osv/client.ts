@@ -47,7 +47,7 @@ export class OsvClient {
         packageName: queryable[index]?.name ?? 'unknown',
         severity: null,
         summary: null,
-        url: `https://osv.dev/vulnerability/${vuln.id}`,
+        url: `https://osv.dev/vulnerability/${encodeURIComponent(vuln.id)}`,
       })),
     );
 
